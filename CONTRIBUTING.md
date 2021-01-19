@@ -14,12 +14,12 @@ It is meant to be a simple filehosting service, simple to use, simple to install
 
 This project won't evolve to a file manager and will focus to keep a very few dependencies.
 
-So things like a markdown parser for the ToS or E-Mail tasks would be usefull for sure, but may be [rejected](https://gitlab.com/mojo42/Jirafeau/issues/37#note_1191566) since they would a lot of dependencies and makes the project more complex.
+So things like a markdown parser for the ToS or E-Mail tasks would be useful for sure, but may be [rejected](https://gitlab.com/mojo42/Jirafeau/issues/37#note_1191566) since they would a lot of dependencies and makes the project more complex.
 
 ## Structure
 
-Here is a little explaination of Jirafeau's arboresence in a simplified
-view only to show the most importants files and their role.
+Here is a little explanation of Jirafeau's structure in a simplified
+view only to show the most important files and their role.
 
 ```
 .
@@ -32,29 +32,29 @@ view only to show the most importants files and their role.
 ├── tos.php : "Terms of Service" page
 ├── lib
 │   ├── config.original.php : default parameters
-│   ├── config.local.php : the users parameters (auto generated, not versionized)
+│   ├── config.local.php : the users parameters (auto generated, not versioned)
 │   ├── functions_*.js : JavaScript functions for index.php (AJAX etc)
 │   ├── functions.php : core functions and tools of Jirafeau
 │   ├── tos.original.txt : default text show on the ToS page
-│   ├── tos.local.txt : a users alternative text show on the ToS page (not versionized)
+│   ├── tos.local.txt : a users alternative text show on the ToS page (not versioned)
 │   ├── settings.php : core settings of Jirafeau, includes the configuration params automatically
 │   ├── locales : language folder, contains all language files
 │   └── template
 │       ├── footer.php : footer with links to source and ToS for all HTML views
 │       └── header.php : header with logo and title for all HTML views
 ├── media : folder containing all skins
-└── var-xxxxxxx : the users folder containing all data (auto generated, not versionized)
-    ├── async : chunks of uploaded files (not succressfull yet) 
+└── var-xxxxxxx : the users folder containing all data (auto generated, not versioned)
+    ├── async : chunks of uploaded files (not successful yet) 
     ├── files : all files that have been uploaded successfully
     │   ├── [hashed file name] : the original file
     │   └── [hashed file name]_count : count many links to this file exist
-    └── links : all links, including meta-informations, pointing to files
+    └── links : all links, including metadata, pointing to files
         └── [link] : the link file, includes which original file should be used and some meta data like creation date, expiration time
 ```
 
 ## Translations
 
-Translation may be add via [Jirafeau's Weblate](https://hosted.weblate.org/projects/jirafeau/master/).
+Translation may be added via [Jirafeau's Weblate](https://hosted.weblate.org/projects/jirafeau/master/).
 
 ## Coding style
 
@@ -71,11 +71,11 @@ Translation may be add via [Jirafeau's Weblate](https://hosted.weblate.org/proje
 
 Please create one branch for each feature and send one merge request for each branch. 
 
-Dont squash several changes or commits into one merge request as this is hard to review.
+Don't squash several changes or commits into one merge request as this is hard to review.
 
 Please use ```next-release``` as base branch and send your merge request to this branch (not ```master```).
 
-Quick walktrough:
+Quick walkthrough:
 
 * Create ticket for new feature
 * Fork the original repository, clone the own repository, add the original repository as upstream

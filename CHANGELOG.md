@@ -26,7 +26,7 @@
 - Litespeed workaround for large files
 - Admin interface can compute data folder size
 - REUSE compliance test
-- multiple docker features: mcrypt support, daily cleanup, unprivilidged user
+- multiple docker features: mcrypt support, daily cleanup, unprivileged user
 - Add upload password capability in script options
 - Various bugfixes around retries and error management
 - Automatically lower chunk size sent to server refusing large chunks
@@ -81,7 +81,7 @@ find links -type f | while read link; do bn="$(basename "$link")"; mkdir "links/
 - Security fixes, thanks [Bishopfox Team](https://www.bishopfox.com/)
 - Translation fixes
 - Docker fix
-- Advertise javascript license for LibreJS compatibility
+- Advertise JavaScript license for LibreJS compatibility
 - other minor fixes
 - Upgrade from 3.4.0: in-place upgrade
 
@@ -157,14 +157,14 @@ To reuse a custom version of your ToS, move your ```/tos_text.php``` file to ```
 - Link on API page to generate bash script
 - More informative error codes for API
 - Security Fix: Prevent authentication bypass for admin interface
-- CLI script to remove expired files automatically with a cronjob
+- CLI script to remove expired files automatically with a cron job
 - SHA-256 hash the admin password
 - New theme "elegantish"
 - Fix for JavaScript MIME-Type, prevents blocking the resource on some servers
 - Show download link for a file in admin interface
 - Default time for expiration (set to 'month' by default)
 - New expiration time: 'quarter'
-- A lof of translation contributions
+- A lot of translation contributions
 - Code cleanups
 - Upgrade from 1.1: in-place upgrade
 
@@ -175,7 +175,7 @@ To reuse a custom version of your ToS, move your ```/tos_text.php``` file to ```
 - Unlimited file size upload using HTML5 file API
 - Show speed and estimated time during upload
 - A lot of fixes
-- A lot of new langages
+- A lot of new languages
 - Small API to upload files
 - Limit access to Jirafeau using IP, mask, passwords
 - Manage (some) proxy headers
@@ -197,7 +197,7 @@ The very first version of Jirafeau after the fork of Jyraphe.
 - Keep uploader's ip
 - Delete link for each upload
 - No more clear text password storage
-- Simple langage support
+- Simple language support
 - Add an admin interface
 - New Design
 - Add term of use

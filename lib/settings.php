@@ -52,7 +52,7 @@ define('VAR_ASYNC', $cfg['var_root'] . 'async/');
 // root of the domain without handling the URL scheme
 $absPrefix = parse_url($cfg['web_root'], PHP_URL_PATH);
 if (true === empty($absPrefix)) {
-    // fallback if installation isnt done yet: relative links to same level on the current page
+    // fallback if installation isn't done yet: relative links to same level on the current page
     $absPrefix = './';
 }
 define('JIRAFEAU_ABSPREFIX', $absPrefix);

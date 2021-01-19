@@ -25,7 +25,7 @@
  * rename it to »config.local.php« and adapt the parameters.
  **/
 
-/* URL of installation, with traling slash (eg. »https://exmaple.com/jirafeau/«)
+/* URL of installation, with trailing slash (eg. »https://example.com/jirafeau/«)
  */
 $cfg['web_root'] = '';
 
@@ -33,10 +33,10 @@ $cfg['web_root'] = '';
  */
 $cfg['var_root'] = '';
 
-/* Language - choice between 'auto' or any language located in the /lib/locales/ folder.
+/* Language - choose between 'auto' or any language located in the /lib/locales/ folder.
  * The mode »auto« will cause the script to detect the user's browser information
- * and offer a matching language, and use »en« if it is not available.
- * Forcing to a specific lang lightly reduce lang computation.
+ * and offer a matching language, or use »en« if it is not available.
+ * Forcing a specific lang will slightly reduce computation time.
  */
 $cfg['lang'] = 'auto';
 
@@ -70,7 +70,7 @@ $cfg['enable_crypt'] = false;
 $cfg['link_name_length'] = 8;
 
 /* Upload password(s).
- * An empty array will disable the password authentification.
+ * An empty array will disable password authentication.
  * $cfg['upload_password'] = array();               // No password
  * $cfg['upload_password'] = array('psw1');         // One password
  * $cfg['upload_password'] = array('psw1', 'psw2'); // Two passwords
@@ -93,7 +93,7 @@ $cfg['upload_ip'] = array();
 $cfg['upload_ip_nopassword'] = array();
 
 /* Password for the admin interface.
- * An empty password will disable the password authentification.
+ * An empty password will disable password authentication.
  * The password is a sha256 hash of the original version.
  */
 $cfg['admin_password'] = '';

@@ -55,18 +55,18 @@ if (php_sapi_name() == "cli") {
         exit;
     }
 
-    /* Unlog if asked. */
+    /* Logout if requested. */
     if (jirafeau_admin_session_logged() && isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
         jirafeau_admin_session_end();
     }
 
     if (!jirafeau_admin_session_logged()) {
-        /* Test HTTP authentification. */
+        /* Test HTTP authentication. */
         if (!empty($cfg['admin_http_auth_user']) &&
           $cfg['admin_http_auth_user'] == $_SERVER['PHP_AUTH_USER']) {
             jirafeau_admin_session_start();
         }
-        /* Test web password authentification. */
+        /* Test web password authentication. */
         elseif (!empty($cfg['admin_password']) && isset($_POST['admin_password'])) {
             if ($cfg['admin_password'] === hash('sha256', $_POST['admin_password'])) {
                 jirafeau_admin_session_start();

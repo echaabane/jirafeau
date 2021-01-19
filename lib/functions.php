@@ -20,7 +20,7 @@
  */
 
 /**
- * Transform a string in a path by seperating each letters by a '/'.
+ * Transform a string in a path by separating each letters by a '/'.
  * @return path finishing with a '/'
  */
 function s2p($s)
@@ -418,7 +418,7 @@ function jirafeau_upload($file, $one_time_download, $key, $time, $ip, $crypt, $l
         }
     }
 
-    /* file informations */
+    /* file information */
     $hash = jirafeau_hash_file($file_hash_method, $file['tmp_name']);
     $name = str_replace(NL, '', trim($file['name']));
     $mime_type = $file['type'];
@@ -593,8 +593,8 @@ function check_errors($cfg)
 }
 
 /**
- * Read link informations
- * @return array containing informations.
+ * Read link information
+ * @return array containing information.
  */
 function jirafeau_get_link($hash)
 {
@@ -659,7 +659,7 @@ function jirafeau_admin_list($name, $file_hash, $link_hash)
                 /* Push new found directory. */
                 $stack[] = $d . $node . '/';
             } elseif (is_file($d . $node)) {
-                /* Read link informations. */
+                /* Read link information. */
                 $l = jirafeau_get_link($node);
                 if (!count($l)) {
                     continue;
@@ -675,7 +675,7 @@ function jirafeau_admin_list($name, $file_hash, $link_hash)
                 if (!empty($link_hash) && $link_hash != $node) {
                     continue;
                 }
-                /* Print link informations. */
+                /* Print link information. */
                 echo '<tr>';
                 echo '<td>' .
                 '<strong><a id="upload_link" href="f.php?h='. jirafeau_escape($node) .'" title="' .
@@ -737,7 +737,7 @@ function jirafeau_admin_clean()
                 /* Push new found directory. */
                 $stack[] = $d . $node . '/';
             } elseif (is_file($d . $node)) {
-                /* Read link informations. */
+                /* Read link information. */
                 $l = jirafeau_get_link(basename($node));
                 if (!count($l)) {
                     continue;
@@ -757,7 +757,7 @@ function jirafeau_admin_clean()
 
 
 /**
- * Clean old async transferts.
+ * Clean old async transfers.
  * @return number of cleaned files.
  */
 function jirafeau_admin_clean_async()
@@ -778,12 +778,12 @@ function jirafeau_admin_clean_async()
                 /* Push new found directory. */
                 $stack[] = $d . $node . '/';
             } elseif (is_file($d . $node)) {
-                /* Read async informations. */
+                /* Read async information. */
                 $a = jirafeau_get_async_ref(basename($node));
                 if (!count($a)) {
                     continue;
                 }
-                /* Delete transferts older than 1 hour. */
+                /* Delete transfers older than 1 hour. */
                 if (time() - $a['last_edited'] > 3600) {
                     jirafeau_async_delete(basename($node));
                     $count++;
@@ -892,8 +892,8 @@ function jirafeau_admin_bug_report($cfg)
 }
 
 /**
- * Read async transfert informations
- * @return array containing informations.
+ * Read async transfer information
+ * @return array containing information.
  */
 function jirafeau_get_async_ref($ref)
 {
@@ -917,7 +917,7 @@ function jirafeau_get_async_ref($ref)
 }
 
 /**
- * Delete async transfert informations
+ * Delete async transfer information
  */
 function jirafeau_async_delete($ref)
 {
@@ -941,7 +941,7 @@ function jirafeau_async_delete($ref)
 
 /**
   * Init a new asynchronous upload.
-  * @param $finename Name of the file to send
+  * @param $filename Name of the file to send
   * @param $one_time One time upload parameter
   * @param $key eventual password (or blank)
   * @param $time time limit
@@ -976,7 +976,7 @@ function jirafeau_async_init($filename, $type, $one_time, $key, $time, $ip)
         $password = md5($key);
     }
 
-    /* Store informations. */
+    /* Store information. */
     $p .= $ref;
     $handle = fopen($p, 'w');
     fwrite(
@@ -1054,7 +1054,7 @@ function jirafeau_async_push($ref, $data, $code, $max_file_size)
 }
 
 /**
-  * Finalyze an asynchronous upload.
+  * Finalize an asynchronous upload.
   * @param $ref asynchronous upload reference
   * @param $code client code for this operation
   * @param $crypt boolean asking to crypt or not

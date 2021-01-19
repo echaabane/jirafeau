@@ -293,7 +293,7 @@ if [ -z "$2" ]; then
     echo "    $0 delete URL"
     echo
     echo "Global variables to export:"
-    echo "    JIRAFEAU_PROXY: Domain and port of proxy server, eg. »proxysever.example.com:3128«"
+    echo "    JIRAFEAU_PROXY: Domain and port of proxy server, eg. »proxyserver.example.com:3128«"
     echo "    JIRAFEAU_URL : URI to Jirafeau installation with trailing slash, eg. »https://example.com/jirafeau/«"
     echo "    JIRAFEAU_TIME : expiration time, eg. »minute«, »hour«, »day«, »week«, fortnight, »month«, »quarter«, »year« or »none«"
     echo "    JIRAFEAU_ONE_TIME : self-destroy after first download, eg. »1« to enable or »« (empty) to disable"

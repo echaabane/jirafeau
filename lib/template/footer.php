@@ -6,7 +6,7 @@
             ' <a href="https://gitlab.com/mojo42/Jirafeau" target="_blank" rel="noopener noreferrer">' . t('JI_PROJECT') . '</a>' .
             ' (<a href="https://www.gnu.org/licenses/agpl.html" target="_blank" rel="noopener noreferrer"><abbr title="GNU Affero General Public License v3">AGPL-3.0</abbr></a>)';
         ?>
-        <!-- Installation dependend links -->
+        <!-- Installation dependent links -->
         <?php
         if (false === empty($cfg['installation_done'])) {
             echo ' <span>|</span> ';
