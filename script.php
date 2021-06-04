@@ -381,9 +381,9 @@ if [ "$1" == "send" ]; then
     echo
     echo "Download via API:"
     if [[ $key_code ]]; then
-        echo "    ${0} get ${url}${apipage}?h=$code&k=$key_code [PASSWORD}"
+        echo "    ${0} get ${url}${apipage}?h=$code&k=$key_code [PASSWORD]"
     else
-        echo "    ${0} get ${url}${apipage}?h=$code [PASSWORD}"
+        echo "    ${0} get ${url}${apipage}?h=$code [PASSWORD]"
     fi
     echo "Delete via API:"
     echo "    ${0} delete \"${url}${downloadpage}?h=$code&d=$del_code\""
