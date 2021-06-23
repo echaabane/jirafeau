@@ -1,4 +1,5 @@
 {
+    "2_W": "İki hafta",
     "REPORTING_AN_ISSUE": "",
     "SIZE_DATA": "Veri boyutu",
     "INCOMPATIBLE_OPTIONS_W": "Aşağıdaki yapılandırma seçenekleri uyumsuz:",
@@ -20,7 +21,7 @@
     "1_D": "Bir gün",
     "1_W": "Bir hafta",
     "1_M": "Bir ay",
-    "1_Q": "15 dakika",
+    "1_Q": "Üç ay",
     "1_Y": "Bir yıl",
     "NONE": "Hiçbiri",
     "UP_PSW": "Yükleme şifresi",

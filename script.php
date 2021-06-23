@@ -99,6 +99,9 @@ if (isset($_FILES['file']) && is_writable(VAR_FILES)
             case 'week':
                 $time += JIRAFEAU_WEEK;
                 break;
+            case 'fortnight':
+                $time += JIRAFEAU_FORTNIGHT;
+                break;
             case 'month':
                 $time += JIRAFEAU_MONTH;
                 break;
@@ -292,7 +295,7 @@ if [ -z "$2" ]; then
     echo "Global variables to export:"
     echo "    JIRAFEAU_PROXY: Domain and port of proxy server, eg. »proxysever.example.com:3128«"
     echo "    JIRAFEAU_URL : URI to Jirafeau installation with trailing slash, eg. »https://example.com/jirafeau/«"
-    echo "    JIRAFEAU_TIME : expiration time, eg. »minute«, »hour«, »day«, »week«, »month«, »quarter«, »year« or »none«"
+    echo "    JIRAFEAU_TIME : expiration time, eg. »minute«, »hour«, »day«, »week«, fortnight, »month«, »quarter«, »year« or »none«"
     echo "    JIRAFEAU_ONE_TIME : self-destroy after first download, eg. »1« to enable or »« (empty) to disable"
     echo "    JIRAFEAU_CURL : alternative path to curl binary"
     echo "    JIRAFEAU_UPLOAD_PASSWD : upload password"
@@ -452,6 +455,9 @@ elseif (isset($_GET['init_async'])) {
                 break;
             case 'week':
                 $time += JIRAFEAU_WEEK;
+                break;
+            case 'fortnight':
+                $time += JIRAFEAU_FORTNIGHT;
                 break;
             case 'month':
                 $time += JIRAFEAU_MONTH;

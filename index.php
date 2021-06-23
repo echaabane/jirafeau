@@ -209,6 +209,10 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
             'label' => '1_W'
           ),
           array(
+              'value' => 'fortnight',
+              'label' => '2_W'
+          ),
+          array(
             'value' => 'month',
             'label' => '1_M'
           ),

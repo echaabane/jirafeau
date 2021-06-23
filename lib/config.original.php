@@ -112,8 +112,9 @@ $cfg['admin_http_auth_user'] = '';
  * 'hour': file available for one hour
  * 'day': file available for one day
  * 'week': file available for one week
+ * 'fortnight': file is available for two weeks
  * 'month': file is available for one month
- * 'quarter': file is available for three month
+ * 'quarter': file is available for three months
  * 'year': file available for one year
  * 'none': unlimited availability
  */
@@ -122,6 +123,7 @@ $cfg['availabilities'] = array(
     'hour' => true,
     'day' => true,
     'week' => true,
+    'fortnight' => true,
     'month' => true,
     'quarter' => false,
     'year' => false,
