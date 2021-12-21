@@ -47,23 +47,13 @@ require(JIRAFEAU_ROOT . 'lib/template/header.php');
 if (!file_exists(JIRAFEAU_CFG)) {
     // show an error if it is not possible to create the file
     if (!@touch(JIRAFEAU_CFG)) {
-        jirafeau_fatal_error(
-            t('The local configuration file could not be created. Create a ' .
-               '<code>lib/config.local.php</code> file and give the write ' .
-               'permission to the web server (preferred solution), or give the ' .
-               'write permission to the web server on the <code>lib</code> ' .
-               'directory.')
-        );
+        jirafeau_fatal_error(t('CONF_SOLUTION'));
     }
 }
 
 // is the local configuration writable?
 if (!is_writable(JIRAFEAU_CFG) && !@chmod(JIRAFEAU_CFG, '0666')) {
-    jirafeau_fatal_error(
-        t('The local configuration is not writable by the web server. ' .
-            'Give the write permission to the web server on the ' .
-            '<code>lib/config.local.php</code> file.')
-    );
+    jirafeau_fatal_error(t('CONF_SOLUTION_2'));
 }
 
 /**
