@@ -272,11 +272,16 @@ elseif ($link['crypted']) {
 }
 /* Read file. */
 else {
-    $r = fopen(VAR_FILES . $p . $link['hash'], 'r');
-    while (!feof($r)) {
-        print fread($r, 1024);
+    if ($cfg['use_xsendfile']) {
+        $file_web_path = preg_replace('#^' . $_SERVER['DOCUMENT_ROOT'] . '#', '', VAR_FILES);
+        header('X-Sendfile: ' . $file_web_path . $p . $link['hash']);
+    } else {
+        $r = fopen(VAR_FILES . $p . $link['hash'], 'r');
+        while (!feof($r)) {
+            print fread($r, 1024);
+        }
+        fclose($r);
     }
-    fclose($r);
 }
 
 if ($link['onetime'] == 'O') {

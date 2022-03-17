@@ -183,6 +183,16 @@ $cfg['file_hash'] = 'md5';
  */
 $cfg['litespeed_workaround'] = false;
 
+/* Use the X-Sendfile header which should cause your webserver to handle
+ * the sending of the file. The webserver must be configured to do this
+ * using the mod_xsendfile module in Apache or the appropriate config in
+ * lighttpd. The offload will not happen in the case of server-side encrypted
+ * files, but all other cases should work. Benefits include being able
+ * to resume downloads and seek instantly in media players like VLC or
+ * the Firefox/Discord/Chrome embedded player.
+ */
+$cfg['use_xsendfile'] = false;
+
 /* Store uploader's IP along with 'link' file.
  * Depending of your legislation, you may have to adjust this parameter.
  */
