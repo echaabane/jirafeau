@@ -511,7 +511,7 @@ function jirafeau_is_viewable($mime)
     if (!empty($mime)) {
         $viewable = array('image', 'video', 'audio');
         $decomposed = explode('/', $mime);
-        if (in_array($decomposed[0], $viewable)) {
+        if (in_array($decomposed[0], $viewable) && strpos($mime, 'image/svg+xml') === false) {
             return true;
         }
         $viewable = array('text/plain');

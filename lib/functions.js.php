@@ -182,16 +182,17 @@ function show_link (reference, delete_code, crypt_key, date)
         }
 
         // Test if content can be previewed
-         type = document.getElementById('file_select').files[0].type;
-         if (type.startsWith('image/') ||
-                type.startsWith('audio') ||
-                type.startsWith('text/plain') ||
-                type.startsWith('video/'))
-         {
+        type = document.getElementById('file_select').files[0].type;
+        if ((type.startsWith('image/')
+                || type.startsWith('audio')
+                || type.startsWith('text/plain')
+                || type.startsWith('video/'))
+            && !type.includes('image/svg+xml'))
+        {
             document.getElementById('preview_link').href = preview_link_href;
             document.getElementById('preview_link_text').innerHTML = web_root + preview_link_href;
             document.getElementById('upload_finished_preview').style.display = '';
-         }
+        }
     }
 
     // Direct download link
