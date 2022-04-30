@@ -294,6 +294,8 @@ So:
 
 Feel free to create an issue if you found a bug.
 
+Also, you can come have a chat on [libera.chat](https://web.libera.chat/) in `#jirafeau` channel.
+
 ### Can I buy you a coffee?
 
 You can [drop few bucks](https://www.paypal.com/paypalme/jeromejutteau) to help the [demo web site](https://jirafeau.net) to stay alive.
