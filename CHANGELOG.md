@@ -8,7 +8,20 @@
    * If you have installed Jirafeau just by uploading files on your server, you can download the desired version, overwrite/remove all files and chown/chmod files if needed. Keep a backup of your local configuration file tough.
 4. With you browser, go to your Jirafeau root page
 5. Follow the installation wizard, it should propose you the same data folder or even update automatically
-6. Check your ```/lib/config.local.php``` and compare it with the ```/lib/config.original.php``` to see if new configuration items are available
+6. Check your `/lib/config.local.php` and compare it with the `/lib/config.original.php` to see if new configuration items are available
+
+
+# version 4.4.0
+
+- Add docker options
+- Admin pannel can output informations for bug opening
+- Fixes for PHP 8
+- Fix autocomplete field for passwords
+- Fix file previewing
+- Disallow file preview for image/svg+xml files
+- Expiry after a fortnight (2 weeks)
+- Typo and spelling mistakes
+- Upgrade from 4.3.0: in-place upgrade
 
 # version 4.3.0
 
