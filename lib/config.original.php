@@ -95,6 +95,7 @@ $cfg['upload_ip_nopassword'] = array();
 /* Password for the admin interface.
  * An empty password will disable password authentication.
  * The password is a sha256 hash of the original version.
+ * Example: echo -n "myVerySecretAdminPassword" | sha256sum
  */
 $cfg['admin_password'] = '';
 
