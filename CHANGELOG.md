@@ -8,7 +8,7 @@
    * If you have installed Jirafeau just by uploading files on your server, you can download the desired version, overwrite/remove all files and chown/chmod files if needed. Keep a backup of your local configuration file tough.
 4. With you browser, go to your Jirafeau root page
 5. Follow the installation wizard, it should propose you the same data folder or even update automatically
-6. Check your `/lib/config.local.php` and compare it with the `/lib/config.original.php` to see if new configuration items are available
+6. Check your `/lib/config.local.php` and compare it with the `/lib/config.original.php` to see if new configuration items are available. If a new item is missing in your `config.local.php`, this may trigger some errors as Jirafeau may expect to have them.
 
 
 # version 4.4.0
@@ -23,6 +23,9 @@
 - Typo and spelling mistakes
 - Upgrade from 4.3.0: in-place upgrade
 
+New configuration items:
+- `fortnight` value in `availabilities` array (default to `true`)
+
 # version 4.3.0
 
 - Fix various docker errors
@@ -31,6 +34,9 @@
 - Code cleaning
 - Add option 'store_uploader_ip' to avoid uploaders ip logging
 - Upgrade from 4.2.0: in-place upgrade
+
+New configuration items:
+- `store_uploader_ip` (default to `true`)
 
 # version 4.2.0
 
