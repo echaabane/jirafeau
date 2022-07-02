@@ -946,12 +946,10 @@ function jirafeau_async_delete($ref)
   * @param $key eventual password (or blank)
   * @param $time time limit
   * @param $ip ip address of the client
-  * @return a string containing a temporary reference followed by a code or the string 'Error'
+  * @return a string containing a temporary reference followed by a code or a string starting with 'Error'
   */
 function jirafeau_async_init($filename, $type, $one_time, $key, $time, $ip)
 {
-    $res = 'Error';
-
     /* Create temporary folder. */
     $ref;
     $p;
@@ -962,8 +960,7 @@ function jirafeau_async_init($filename, $type, $one_time, $key, $time, $ip)
     } while (file_exists($p));
     @mkdir($p, 0755, true);
     if (!file_exists($p)) {
-        echo 'Error';
-        return;
+        return 'Error: cannot create async folder.';
     }
 
     /* touch empty data file */
@@ -997,7 +994,7 @@ function jirafeau_async_init($filename, $type, $one_time, $key, $time, $ip)
   * @param $file piece of data
   * @param $code client code for this operation
   * @param $max_file_size maximum allowed file size
-  * @return a string containing a next code to use or the string "Error"
+  * @return a string containing a next code to use or a string starting with 'Error'
   */
 function jirafeau_async_push($ref, $data, $code, $max_file_size)
 {
@@ -1005,11 +1002,17 @@ function jirafeau_async_push($ref, $data, $code, $max_file_size)
     $a = jirafeau_get_async_ref($ref);
 
     /* Check some errors. */
-    if (count($a) == 0
-        || $a['next_code'] != "$code"
-        || empty($data['tmp_name'])
-        || !is_uploaded_file($data['tmp_name'])) {
-        return 'Error';
+    if (count($a) == 0) {
+        return "Error: cannot find transfer";
+    }
+    if ($a['next_code'] != "$code") {
+        return "Error: bad transfer code";
+    }
+    if (empty($data['tmp_name'])) {
+        return "Error: missing tmp_name";
+    }
+    if (!is_uploaded_file($data['tmp_name'])) {
+        return "Error: tmp_name may not be uploaded";
     }
 
     $p = s2p($ref);
@@ -1022,7 +1025,7 @@ function jirafeau_async_push($ref, $data, $code, $max_file_size)
     if ($max_file_size > 0 &&
         filesize($r_path) + filesize($w_path) > $max_file_size * 1024 * 1024) {
         jirafeau_async_delete($ref);
-        return 'Error';
+        return "Error: file size is above upload limit";
     }
 
     /* Concatenate data. */
@@ -1033,7 +1036,7 @@ function jirafeau_async_push($ref, $data, $code, $max_file_size)
             fclose($r);
             fclose($w);
             jirafeau_async_delete($ref);
-            return 'Error';
+            return "Error: cannot write file";
         }
     }
     fclose($r);
@@ -1059,7 +1062,7 @@ function jirafeau_async_push($ref, $data, $code, $max_file_size)
   * @param $code client code for this operation
   * @param $crypt boolean asking to crypt or not
   * @param $link_name_length link name length
-  * @return a string containing the download reference followed by a delete code or the string 'Error'
+  * @return a string containing the download reference followed by a delete code or a string starting with 'Error'
   */
 function jirafeau_async_end($ref, $code, $crypt, $link_name_length, $file_hash_method)
 {
@@ -1067,13 +1070,13 @@ function jirafeau_async_end($ref, $code, $crypt, $link_name_length, $file_hash_m
     $a = jirafeau_get_async_ref($ref);
     if (count($a) == 0
         || $a['next_code'] != "$code") {
-        return "Error";
+        return "Error: bad code for ending transfer";
     }
 
     /* Generate link infos. */
     $p = VAR_ASYNC . s2p($ref) . $ref . "_data";
     if (!file_exists($p)) {
-        return 'Error';
+        return "Error: referenced file does not exist";
     }
 
     $crypted = false;
@@ -1121,9 +1124,11 @@ function jirafeau_async_end($ref, $code, $crypt, $link_name_length, $file_hash_m
     fclose($handle);
     $hash_link = substr(base_16_to_64(md5_file($link_tmp_name)), 0, $link_name_length);
     $l = s2p("$hash_link");
-    if (!@mkdir(VAR_LINKS . $l, 0755, true) ||
-        !rename($link_tmp_name, VAR_LINKS . $l . $hash_link)) {
-        return 'Error';
+    if (!@mkdir(VAR_LINKS . $l, 0755, true)) {
+        return "Error: cannot create folder in LINKS";
+    }
+    if (!rename($link_tmp_name, VAR_LINKS . $l . $hash_link)) {
+        return "Error: cannot rename file in LINKS";
     }
 
     /* Clean async upload. */
