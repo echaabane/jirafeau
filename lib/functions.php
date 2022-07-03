@@ -579,13 +579,15 @@ function show_errors()
 
 function check_errors($cfg)
 {
-    if (file_exists(JIRAFEAU_ROOT . 'install.php')
-        && !($cfg['installation_done'] === true)) {
-        header('Location: install.php');
-        exit;
+    if (!($cfg['installation_done'] === true)) {
+        if (file_exists(JIRAFEAU_ROOT . 'install.php')) {
+            header('Location: install.php');
+            exit;
+        } else {
+            add_error(t('INSTALL_FILE_NOT_FOUND_TITLE'), t('INSTALL_FILE_NOT_FOUND_DESC'));
+        }
     }
 
-    /* Checking for errors. */
     if (!is_writable(VAR_FILES)) {
         add_error(t('FILE_DIR_W'), VAR_FILES);
     }
