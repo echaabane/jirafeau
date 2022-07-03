@@ -1008,6 +1008,11 @@ function jirafeau_async_push($ref, $data, $code, $max_file_size)
     if ($a['next_code'] != "$code") {
         return "Error: bad transfer code";
     }
+    if ($data['error'] != UPLOAD_ERR_OK) {
+        // Check error code in https://www.php.net/manual/en/features.file-upload.errors.php
+        $data_details = print_r($data, true);
+        return "Error: upload error: {$data_details}";
+    }
     if (empty($data['tmp_name'])) {
         return "Error: missing tmp_name";
     }
