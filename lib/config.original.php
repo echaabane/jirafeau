@@ -210,3 +210,14 @@ $cfg['installation_done'] = false;
  * var- folder should kept secret and accessing it may lead to data leak if unprotected.
  */
 $cfg['debug'] = false;
+
+/** Set Jirafeau's maximal upload chunk
+ * When Jirafeau upload a large file, Jirafeau sends several data chunks to fit server's capabilities.
+ * Jirafeau tries to upload each data chunk with the maximal size allowed by PHP (post_max_size and upload_max_filesize).
+ * However, too large PHP configuration values are not needed and could induce unwanted side effects (see #303).
+ * This parameter set Jirafeau's own maximal chunk size with a reasonable value.
+ * Option is only used for async uploads and won't be used for browsers without html5 support.
+ * You should not touch this parameter unless you have good reason to do so. Feel free to open an issue to ask questions.
+ * Set to 0 to remove limitation.
+ */
+$cfg['max_upload_chunk_size_bytes'] = 100000000; // 100MB

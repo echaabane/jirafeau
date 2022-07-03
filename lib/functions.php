@@ -230,6 +230,21 @@ function jirafeau_get_max_upload_size()
 }
 
 /**
+ * get the maximal upload size for a data chunk in async uploads
+ * @param max_upload_chunk_size_bytes
+ */
+function jirafeau_get_max_upload_chunk_size_bytes($max_upload_chunk_size_bytes = 0)
+{
+    if ($max_upload_chunk_size_bytes > 0) {
+        return min(
+            jirafeau_get_max_upload_size_bytes(),
+            $max_upload_chunk_size_bytes
+        );
+    }
+    return jirafeau_get_max_upload_size_bytes();
+}
+
+/**
  * gets a string explaining the error
  * @param $code the error code
  * @returns a string explaining the error
@@ -835,7 +850,8 @@ function jirafeau_admin_bug_report($cfg)
         'enable_crypt',
         'preview',
         'maximal_upload_size',
-        'store_uploader_ip'
+        'store_uploader_ip',
+        'max_upload_chunk_size_bytes'
     ];
     foreach ($jirafeau_options as &$o) {
         $v = $cfg[$o];

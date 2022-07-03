@@ -269,7 +269,7 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     onclick="
         document.getElementById('upload').style.display = 'none';
         document.getElementById('uploading').style.display = '';
-        upload (<?php echo jirafeau_get_max_upload_size_bytes(); ?>);
+        upload (<?php echo jirafeau_get_max_upload_chunk_size_bytes($cfg['max_upload_chunk_size_bytes']); ?>);
     "/>
     </p>
         </table>

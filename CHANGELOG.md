@@ -10,6 +10,12 @@
 5. Follow the installation wizard, it should propose you the same data folder or even update automatically
 6. Check your `/lib/config.local.php` and compare it with the `/lib/config.original.php` to see if new configuration items are available. If a new item is missing in your `config.local.php`, this may trigger some errors as Jirafeau may expect to have them.
 
+# version 4.5
+
+- Fix side effects of setting too high values in php configuration.
+
+New configuration items:
+-  `max_upload_chunk_size_bytes` option
 
 # version 4.4.0
 

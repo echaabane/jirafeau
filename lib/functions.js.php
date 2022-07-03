@@ -596,14 +596,14 @@ function async_upload_end (code)
     req.send (form);
 }
 
-function upload (max_size)
+function upload (max_chunk_size)
 {
     var one_time_checkbox = document.getElementById('one_time_download');
     var one_time = one_time_checkbox !== null ? one_time_checkbox.checked : false;
     if (check_html5_file_api ())
     {
         async_upload_start (
-            max_size,
+            max_chunk_size,
             document.getElementById('file_select').files[0],
             document.getElementById('select_time').value,
             document.getElementById('input_key').value,
