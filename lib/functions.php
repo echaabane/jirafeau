@@ -1562,5 +1562,5 @@ function jirafeau_add_ending_slash($path)
 
 function jirafeau_default_web_root()
 {
-    return $_SERVER['HTTP_HOST'] . str_replace(basename(__FILE__), '', $_SERVER['REQUEST_URI']);
+    return $_SERVER['HTTP_HOST'] . str_replace('install.php', '', $_SERVER['REQUEST_URI']);
 }
