@@ -89,8 +89,8 @@ if (!empty($delete_code) && $delete_code == $link['link_code']) {
             '</p></div>';
     } else { ?>
         <div>
-        <form action="f.php" method="post" id="submit_delete_post" class="form login">
-        <input type="hidden" name="do_delete" value=1/>
+        <form action="<?php echo 'f.php?h=' . $link_name . '&amp;d=' . $delete_code; ?>" method="post" id="submit_delete_post" class="form login">
+        <input type="hidden" name="do_delete" value="1" />
         <fieldset>
              <legend> <?php echo t('CONFIRM_DEL') ?> </legend>
              <table>
@@ -101,9 +101,7 @@ if (!empty($delete_code) && $delete_code == $link['link_code']) {
                 <?php echo t('USING_SERVICE'). ' <a href="tos.php" target="_blank" rel="noopener noreferrer">' . t('TOS') . '</a>.' ?>
              </td></tr>
              <tr><td>
-                <input type="submit" id="submit_delete"  value="<?php echo t('DELETE'); ?>"
-                onclick="document.getElementById('submit_delete_post').action='<?php echo 'f.php?h=' . $link_name . '&amp;d=' . $delete_code . "';"; ?>
-                document.getElementById('submit_delete').submit ();"/>
+                <input type="submit" id="submit_delete" value="<?php echo t('DELETE'); ?>"/>
              </td></tr>
              </table>
          </fieldset></form></div><?php
