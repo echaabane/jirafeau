@@ -235,13 +235,23 @@ function jirafeau_get_max_upload_size()
  */
 function jirafeau_get_max_upload_chunk_size_bytes($max_upload_chunk_size_bytes = 0)
 {
-    if ($max_upload_chunk_size_bytes > 0) {
-        return min(
-            jirafeau_get_max_upload_size_bytes(),
-            $max_upload_chunk_size_bytes
-        );
+    if ($max_upload_chunk_size_bytes == 0) {
+        $size = jirafeau_get_max_upload_size_bytes();
+        // Jirafeau must choose an arbitrary number as PHP config does not give any limit nor $max_upload_chunk_size_bytes
+        if ($size == 0) {
+            return 10000000; // 10MB
+        }
+        return $size;
     }
-    return jirafeau_get_max_upload_size_bytes();
+
+    $size = min(
+        jirafeau_get_max_upload_size_bytes(),
+        $max_upload_chunk_size_bytes
+    );
+    if ($size == 0) {
+        return $max_upload_chunk_size_bytes;
+    }
+    return $size;
 }
 
 /**

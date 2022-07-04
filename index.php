@@ -299,8 +299,11 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     document.getElementById('send').style.display = 'none';
     if (!check_html5_file_api ())
         document.getElementById('max_file_size').innerHTML = '<?php
-             echo t('NO_BROWSER_SUPPORT') . jirafeau_get_max_upload_size();
-             ?>';
+            $max_size = jirafeau_get_max_upload_size();
+            if ($max_size > 0) {
+                echo t('NO_BROWSER_SUPPORT') . $max_size;
+            }
+        ?>';
 
     addCopyListener('upload_link_button', 'upload_link');
     addCopyListener('preview_link_button', 'preview_link');
