@@ -43,6 +43,7 @@ $cfg['lang'] = 'auto';
 /* Select a theme - see media folder for available themes
  */
 $cfg['style'] = 'courgette';
+$cfg['dark_style'] = 'dark-courgette';
 
 /* Name the organisation running this installation, eg. 'ACME'
  */

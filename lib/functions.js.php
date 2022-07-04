@@ -789,4 +789,34 @@ function addCopyListener(button_id, link_id) {
                 copyLinkToClipboard(link_id);});
     }
 }
+
+function set_dark_mode() {
+    let steel_sheet = "<?php echo 'media/' . $cfg['dark_style'] . '/style.css.php'; ?>";
+    let shortcut_icon = "<?php echo 'media/' . $cfg['dark_style'] . '/favicon.ico'; ?>";
+    document.getElementById('stylesheet').href = steel_sheet;
+    document.getElementById('shortcut_icon').href = steel_sheet;
+}
+
+function set_light_mode() {
+    let steel_sheet = "<?php echo 'media/' . $cfg['style'] . '/style.css.php'; ?>";
+    let shortcut_icon = "<?php echo 'media/' . $cfg['style'] . '/favicon.ico'; ?>";
+    document.getElementById('stylesheet').href = steel_sheet;
+    document.getElementById('shortcut_icon').href = steel_sheet;
+}
+
+function color_scheme_preferences() {
+    
+    let dark_mode_steel_sheet = "<?php echo 'media/' . $cfg['dark_style'] . '/style.css.php'; ?>"
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        set_dark_mode();
+    } else {
+        set_light_mode();
+    }
+
+    // When user change its preference
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', lightMode => {
+        lightMode.matches ? set_dark_mode() : set_light_mode();
+    });
+}
+
 // @license-end
