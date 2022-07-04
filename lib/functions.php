@@ -190,6 +190,9 @@ function jirafeau_ini_to_bytes($value)
     $modifier = substr($value, -1);
     $bytes = substr($value, 0, -1);
     switch (strtoupper($modifier)) {
+    default:
+        return intval($value);
+        break;
     case 'P':
         $bytes *= 1024;
         // no break
@@ -243,7 +246,6 @@ function jirafeau_get_max_upload_chunk_size_bytes($max_upload_chunk_size_bytes =
         }
         return $size;
     }
-
     $size = min(
         jirafeau_get_max_upload_size_bytes(),
         $max_upload_chunk_size_bytes
