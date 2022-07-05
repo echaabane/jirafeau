@@ -273,7 +273,7 @@ Check [issues](https://gitlab.com/mojo42/Jirafeau/issues) to check open bugs and
 
 ### What about this file deduplication thing?
 
-Jirafeau uses a very simple file level deduplication for storage optimization.
+Jirafeau can use a very simple file level deduplication for storage optimization.
 
 This mean that if some people upload several times the same file, this will only store one time the file and increment a counter.
 
@@ -283,9 +283,11 @@ When the counter falls to zero, the file is destroyed.
 
 In order to know if a newly uploaded file already exist, Jirafeau will hash the file using md5 by default but other methods are available (see `file_hash` documentation in `lib/config.original.php`).
 
+This feature is disabled by default and can be enabled through the `file_hash` option.
+
 ### What is the difference between "delete link" and "delete file and links" in admin interface?
 
-As explained in the previous question, files with the same hash are not duplicated and a reference counter stores the number of links pointing to a single file.
+When file deduplication feature is enabled, files with the same hash are not duplicated and a reference counter stores the number of links pointing to a single file.
 So:
 - The button "delete link" will delete the reference to the file but might not destroy the file.
 - The button "delete file and links" will delete all references pointing to the file and will destroy the file.

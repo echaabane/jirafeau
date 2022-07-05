@@ -158,7 +158,7 @@ $cfg['proxy_ip'] = array();
 
 /* File hash
  * In order to make file deduplication work, files can be hashed through different methods.
- * By default, files are hashed through md5 but other methods are available.
+ * To enable file deduplication feature, set this option to `md5`.
  *
  * Possible values are 'md5', 'md5_outside' and 'random'.
  *
@@ -168,9 +168,9 @@ $cfg['proxy_ip'] = array();
  *  - md5 of the last part of the file and
  *  - file's size.
  * This method offer file deduplication at minimal cost but can be dangerous as files with the same partial hash can be mistaken.
- * With 'random' option, file hash is set to a random value and file deduplication cannot work anymore but it is fast and safe.
+ * With 'random' option, file hash is set to a random value and file deduplication cannot work but it is fast and safe.
  */
-$cfg['file_hash'] = 'md5';
+$cfg['file_hash'] = 'random';
 
 /* Work around that LiteSpeed truncates large files when downloading.
  * Only for use with the LiteSpeed web server!

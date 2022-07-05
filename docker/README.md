@@ -36,7 +36,7 @@ Available options:
 - `ADMIN_PASSWORD`: setup a specific admin password. If not set, a random password will be generated.
 - `WEB_ROOT`: setup a specific domain to point at when generating links (e.g. 'jirafeau.mydomain.com/').
 - `VAR_ROOT`: setup a specific path where to place files. default: '/data'.
-- `FILE_HASH`: can be set to `md5` (default), `partial_md5` or `random`.
+- `FILE_HASH`: can be set to `md5`, `partial_md5` or `random` (default).
 - `PREVIEW`: set to 1 or 0 to enable or disable preview.
 - `TITLE`: set Jirafeau instance title.
 - `ORGANISATION`: set organisation (in ToS).

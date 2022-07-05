@@ -13,7 +13,8 @@
 # version 4.5.0
 
 - Support for dark theme
-- Fix side effects of setting too high values in php configuration.
+- Fix side effects of setting too high values in php configuration
+- Change default `file_hash` option to `random`
 
 New configuration items:
 - `max_upload_chunk_size_bytes` option
