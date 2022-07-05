@@ -529,11 +529,11 @@ function async_upload_push (code)
             }
             else
             {
-                if (req.status == 413) // Request Entity Too Large
-                {
-                    // lower async_global_max_size and retry
-                    async_global_max_size = Math.max(1, parseInt (async_global_max_size * 0.8));
-                }
+                // lower async_global_max_size and retry
+                // This can occurs in several cases:
+                // - Request Entity Too Large (413) due to server bad configuration relative to PHP configuration
+                // - Server Error (500) which can happen when PHP's `max_execution_time` is too low comparared to sent size
+                async_global_max_size = Math.max(1, parseInt (async_global_max_size * 0.5));
                 async_upload_push (async_global_last_code);
                 return;
             }
