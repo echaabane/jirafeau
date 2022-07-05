@@ -7,16 +7,17 @@ RUN apk update && \
     echo "UTC" > /etc/timezone
 
 # install lighttpd
-RUN apk add lighttpd git
+RUN apk add lighttpd
 
 # install jirafeau
 RUN mkdir /www
 WORKDIR /www
-COPY .git .git
-RUN git reset --hard && rm -rf docker install.php .git .gitignore .gitlab-ci.yml CONTRIBUTING.md Dockerfile README.md
-RUN touch /www/lib/config.local.php
-RUN chown -R $(id -u lighttpd).$(id -g www-data) /www
-RUN chmod o=,ug=rwX -R /www
+# Will ignore some files through .dockerignore
+COPY . .
+RUN rm -rf docker && \
+    touch /www/lib/config.local.php && \
+    chown -R $(id -u lighttpd).$(id -g www-data) /www && \
+    chmod o=,ug=rwX -R /www
 
 COPY docker/cleanup.sh /cleanup.sh
 COPY docker/run.sh /run.sh
@@ -28,7 +29,6 @@ COPY docker/php.ini /usr/local/etc/php/php.ini
 COPY docker/lighttpd.conf /etc/lighttpd/lighttpd.conf
 
 # cleanup
-RUN apk del git
 RUN rm -rf /var/cache/apk/*
 
 CMD /run.sh

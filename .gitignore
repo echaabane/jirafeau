@@ -11,3 +11,4 @@ composer.phar
 .*
 !.gitlab-ci.yml
 !.gitignore
+!.dockerignore
