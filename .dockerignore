@@ -3,4 +3,5 @@ CONTRIBUTING.md
 Dockerfile
 README.md
 composer.json
+install.php
 .*
