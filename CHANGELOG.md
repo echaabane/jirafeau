@@ -12,13 +12,20 @@
 
 # version 4.5.0
 
-- Support for dark theme
-- Fix side effects of setting too high values in php configuration
-- Change default `file_hash` option to `random`
+- Support for automatic dark theme
+- Fixed wobling admin buttons
+- Disable file deduplication by default
+- Fix side effects of setting too high values in php configuration for async upload
+- Add support for X-Sendfile
+- Retry on more type of possible errors
+- Move docker image to PHP 8.1 
+- Print more error details in case of issue
+- IRC channel to discuss :)
 
 New configuration items:
 - `max_upload_chunk_size_bytes` option
 - `dark_tyle` option
+- Defaulting `file_hash` option from `md5` to `random`
 
 # version 4.4.0
 
