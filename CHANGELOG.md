@@ -12,6 +12,7 @@
 
 # version 4.5.0
 
+- Even more new translation, thanks a lot to all contributors!
 - Support for automatic dark theme
 - Fixed wobling admin buttons
 - Disable file deduplication by default
