@@ -90,6 +90,7 @@ Quick walkthrough:
 
 ## New Releases
 
+* Fetch weblate and rebase and import translations
 * If the release is not done for security purposes: create a new issue and freeze next-release branch for at least week.
 * Compare the [»next-release« branch to »master«](https://gitlab.com/mojo42/Jirafeau/compare/master...next-release)
 * Add a list of noteworthy features and bugfixes to `CHANGELOG.md`
