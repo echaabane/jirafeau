@@ -14,7 +14,7 @@
 
 - Even more new translation, thanks a lot to all contributors!
 - Support for automatic dark theme
-- Fixed wobling admin buttons
+- Fixed wobling admin buttons (light and dark default themes)
 - Disable file deduplication by default
 - Fix side effects of setting too high values in php configuration for async upload
 - Add support for X-Sendfile
