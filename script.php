@@ -260,8 +260,8 @@ if [ -n "$JIRAFEAU_ONE_TIME" ]; then
     one_time='1'
 fi
 
-if [ -n "$UPLOAD_PASSWD" ]; then
-    upload_password="$JIRAFEAU_UPLOAD_PASSWORD"
+if [ -n "$JIRAFEAU_UPLOAD_PASSWD" ]; then
+    upload_password="$JIRAFEAU_UPLOAD_PASSWD"
 fi
 
 if [ -z "$curl" ]; then
