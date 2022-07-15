@@ -1,5 +1,5 @@
 # Select docker image from https://hub.docker.com/_/php/
-image: php:8.1
+image: php:7.3
 
 # Select what we should cache
 cache:
@@ -27,15 +27,8 @@ test_app_phpdefaultversion:
     - ./vendor/bin/parallel-lint --exclude vendor .
     - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
 
-test_app_php81:
-  image: php:8.1
-  script:
-    - ./vendor/bin/parallel-lint --exclude vendor .
-    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
-  allow_failure: true
-
-test_app_php73:
-  image: php:7.3
+job_lint_app_phpnextversion:
+  image: php:7.4
   script:
     - ./vendor/bin/parallel-lint --exclude vendor .
     - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
