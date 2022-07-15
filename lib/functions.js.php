@@ -642,9 +642,11 @@ function upload_time_estimation_add(total_transfered_size)
     // Let's compute the current speed
     var d = new Date();
     var speed = upload_time_estimation_moving_average_speed;
-    if (d.getTime() - upload_time_estimation_transfered_date != 0)
+    if (d.getTime() - upload_time_estimation_transfered_date != 0) {
         speed = (total_transfered_size - upload_time_estimation_transfered_size)
                 / (d.getTime() - upload_time_estimation_transfered_date);
+        speed = Math.max(0, speed);
+    }
     // Let's compute moving average speed on 30 values
     var m = (upload_time_estimation_moving_average_speed * 29 + speed) / 30;
     // Update global values
@@ -712,7 +714,7 @@ function milliseconds_to_time_string (milliseconds)
 function upload_time_estimation_time()
 {
     // Estimate remaining time
-    if (upload_time_estimation_moving_average_speed == 0)
+    if (upload_time_estimation_moving_average_speed <= 0)
         return 0;
     return (upload_time_estimation_total_size - upload_time_estimation_transfered_size)
             / upload_time_estimation_moving_average_speed;
