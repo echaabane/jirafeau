@@ -21,6 +21,7 @@
 - Retry on more type of possible errors
 - Move docker image to PHP 8.1 
 - Print more error details in case of issue
+- Few more little fixes
 - IRC channel to discuss :)
 
 New configuration items:
