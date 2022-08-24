@@ -190,23 +190,23 @@ function jirafeau_ini_to_bytes($value)
     $modifier = substr($value, -1);
     $bytes = substr($value, 0, -1);
     switch (strtoupper($modifier)) {
-    default:
-        return intval($value);
-        break;
-    case 'P':
-        $bytes *= 1024;
-        // no break
-    case 'T':
-        $bytes *= 1024;
-        // no break
-    case 'G':
-        $bytes *= 1024;
-        // no break
-    case 'M':
-        $bytes *= 1024;
-        // no break
-    case 'K':
-        $bytes *= 1024;
+        default:
+            return intval($value);
+            break;
+        case 'P':
+            $bytes *= 1024;
+            // no break
+        case 'T':
+            $bytes *= 1024;
+            // no break
+        case 'G':
+            $bytes *= 1024;
+            // no break
+        case 'M':
+            $bytes *= 1024;
+            // no break
+        case 'K':
+            $bytes *= 1024;
     }
     return $bytes;
 }
@@ -264,19 +264,19 @@ function jirafeau_get_max_upload_chunk_size_bytes($max_upload_chunk_size_bytes =
 function jirafeau_upload_errstr($code)
 {
     switch ($code) {
-    case UPLOAD_ERR_INI_SIZE:
-    case UPLOAD_ERR_FORM_SIZE:
-        return t('Your file exceeds the maximum authorized file size. ');
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            return t('Your file exceeds the maximum authorized file size. ');
 
-    case UPLOAD_ERR_PARTIAL:
-    case UPLOAD_ERR_NO_FILE:
-        return
-            t('Your file was not uploaded correctly. You may succeed in retrying. ');
+        case UPLOAD_ERR_PARTIAL:
+        case UPLOAD_ERR_NO_FILE:
+            return
+                t('Your file was not uploaded correctly. You may succeed in retrying. ');
 
-    case UPLOAD_ERR_NO_TMP_DIR:
-    case UPLOAD_ERR_CANT_WRITE:
-    case UPLOAD_ERR_EXTENSION:
-        return t('Internal error. You may not succeed in retrying. ');
+        case UPLOAD_ERR_NO_TMP_DIR:
+        case UPLOAD_ERR_CANT_WRITE:
+        case UPLOAD_ERR_EXTENSION:
+            return t('Internal error. You may not succeed in retrying. ');
     }
     return t('Unknown error. ');
 }

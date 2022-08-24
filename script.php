@@ -25,8 +25,8 @@ require(JIRAFEAU_ROOT . 'lib/settings.php');
 require(JIRAFEAU_ROOT . 'lib/functions.php');
 require(JIRAFEAU_ROOT . 'lib/lang.php');
 
- global $script_langages;
- $script_langages = array('bash' => 'Bash');
+global $script_langages;
+$script_langages = array('bash' => 'Bash');
 
 /* Operations may take a long time.
  * Be sure PHP's safe mode is off.
@@ -113,7 +113,7 @@ if (isset($_FILES['file']) && is_writable(VAR_FILES)
             case 'year':
                 $time += JIRAFEAU_YEAR;
                 break;
-           default:
+            default:
                 $time = JIRAFEAU_INFINITY;
                 break;
         }
@@ -407,8 +407,8 @@ fi
 }
 /* Initialize an asynchronous upload. */
 elseif (isset($_GET['init_async'])) {
-    if (jirafeau_user_session_logged()) {}
-    elseif (isset($_POST['upload_password'])) {
+    if (jirafeau_user_session_logged()) {
+    } elseif (isset($_POST['upload_password'])) {
         if (!jirafeau_challenge_upload($cfg, get_ip_address($cfg), $_POST['upload_password'])) {
             echo 'Error 20: Invalid password';
             exit;

@@ -62,26 +62,26 @@ if (!is_writable(JIRAFEAU_CFG) && !@chmod(JIRAFEAU_CFG, '0666')) {
 
 if (isset($_POST['step']) && isset($_POST['next'])) {
     switch ($_POST['step']) {
-    case 1:
-        if (strlen($_POST['admin_password'])) {
-            $cfg['admin_password'] = hash('sha256', $_POST['admin_password']);
-        } else {
-            $cfg['admin_password'] = '';
-        }
-        jirafeau_export_cfg($cfg);
-        break;
+        case 1:
+            if (strlen($_POST['admin_password'])) {
+                $cfg['admin_password'] = hash('sha256', $_POST['admin_password']);
+            } else {
+                $cfg['admin_password'] = '';
+            }
+            jirafeau_export_cfg($cfg);
+            break;
 
-    case 2:
-        $cfg['web_root'] = jirafeau_add_ending_slash($_POST['web_root']);
-        $cfg['var_root'] = jirafeau_add_ending_slash($_POST['var_root']);
-        jirafeau_export_cfg($cfg);
-        break;
+        case 2:
+            $cfg['web_root'] = jirafeau_add_ending_slash($_POST['web_root']);
+            $cfg['var_root'] = jirafeau_add_ending_slash($_POST['var_root']);
+            jirafeau_export_cfg($cfg);
+            break;
 
-    case 3:
-        $cfg['web_root'] = jirafeau_add_ending_slash($_POST['web_root']);
-        $cfg['var_root'] = jirafeau_add_ending_slash($_POST['var_root']);
-        jirafeau_export_cfg($cfg);
-        break;
+        case 3:
+            $cfg['web_root'] = jirafeau_add_ending_slash($_POST['web_root']);
+            $cfg['var_root'] = jirafeau_add_ending_slash($_POST['var_root']);
+            jirafeau_export_cfg($cfg);
+            break;
     }
 }
 
@@ -95,20 +95,20 @@ if (isset($_POST['next'])) {
 }
 
 switch ($current) {
-case 1:
-default:
-    ?><h2><?php printf(t('JI_INSTALL') . ' - ' . t('STEP') .
-    ' %d ' . t('OUT_OF') . ' %d', 1, 3);
-    ?></h2> <div id = "install"> <form method="post"> <input type =
+    case 1:
+    default:
+        ?><h2><?php printf(t('JI_INSTALL') . ' - ' . t('STEP') .
+        ' %d ' . t('OUT_OF') . ' %d', 1, 3);
+        ?></h2> <div id = "install"> <form method="post"> <input type =
         "hidden" name = "jirafeau" value =
         "<?php echo JIRAFEAU_VERSION; ?>" /><input type = "hidden" name =
         "step" value = "1" /><fieldset> <legend><?php
-        echo t('ADMIN_PSW');
-    ?></legend> <table> <tr> <td class = "info" colspan =
+            echo t('ADMIN_PSW');
+        ?></legend> <table> <tr> <td class = "info" colspan =
         "2"><?php echo t('ADMIN_INTERFACE_INFO');
-    ?></td> </tr> <tr> <td class = "label"><label for = "select_password"
+        ?></td> </tr> <tr> <td class = "label"><label for = "select_password"
        ><?php echo t('ADMIN_PSW') . ':';
-    ?></label></td>
+        ?></label></td>
         <td class = "field"><input type = "password" name = "admin_password"
         id = "admin_password" size = "40" autocomplete = "new-password"/></td>
         </tr>
@@ -117,90 +117,90 @@ default:
         <td class = "nav next">
         <input type = "submit"
         class = "navleft" name = "previous" value = "<?php
-        echo t('PREV_STEP'); ?>" />
+            echo t('PREV_STEP'); ?>" />
         <input type = "submit" name = "next" value =
         "<?php echo t('NEXT_STEP'); ?>" /></td> </tr> </table>
         </fieldset> </form> </div> <?php
 break;
 
-case 2:
-    ?><h2><?php printf(t('JI_INSTALL') . ' - ' . t('STEP') .
-    ' %d ' . t('OUT_OF') . ' %d', 2, 3);
-    ?></h2> <div id = "install"> <form method="post"> <input type =
+    case 2:
+        ?><h2><?php printf(t('JI_INSTALL') . ' - ' . t('STEP') .
+        ' %d ' . t('OUT_OF') . ' %d', 2, 3);
+        ?></h2> <div id = "install"> <form method="post"> <input type =
         "hidden" name = "jirafeau" value =
         "<?php echo JIRAFEAU_VERSION; ?>" /><input type = "hidden" name =
         "step" value =
         "2" /><fieldset> <legend><?php echo t('INFO');
-    ?></legend> <table> <tr> <td class = "info" colspan =
+        ?></legend> <table> <tr> <td class = "info" colspan =
         "2"><?php echo t('BASE_ADDR_INFO');
-    ?></td> </tr> <tr> <td class = "label"><label for = "input_web_root"
+        ?></td> </tr> <tr> <td class = "label"><label for = "input_web_root"
        ><?php echo t('BASE_ADDR') . ':';
-    ?></label></td>
+        ?></label></td>
         <td class = "field"><input type = "text" name = "web_root"
         id = "input_web_root" value = "<?php
-           echo(empty($cfg['web_root']) ? jirafeau_default_web_root() : $cfg['web_root']);
-      ?>" size = "40" /></td>
+               echo(empty($cfg['web_root']) ? jirafeau_default_web_root() : $cfg['web_root']);
+        ?>" size = "40" /></td>
         </tr> <tr> <td class = "info" colspan = "2"><?php
-        echo t('DATA_DIR_EXPLAINATION');
-    ?></td> </tr> <tr> <td class = "label"><label for = "input_var_root"
+          echo t('DATA_DIR_EXPLAINATION');
+        ?></td> </tr> <tr> <td class = "label"><label for = "input_var_root"
        ><?php echo t('DATA_DIR') . ':';
-    ?></label></td>
+        ?></label></td>
         <td class = "field"><input type = "text" name = "var_root"
         id = "input_var_root" value = "<?php
-        if (empty($cfg['var_root'])) {
-            $alphanum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
+            if (empty($cfg['var_root'])) {
+                $alphanum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
           'abcdefghijklmnopqrstuvwxyz' . '0123456789';
-            $len_alphanum = strlen($alphanum);
-            $var = 'var-';
-            for ($i = 0; $i <JIRAFEAU_VAR_RAND_LENGTH; $i++) {
-                $var .= substr($alphanum, mt_rand(0, $len_alphanum - 1), 1);
+                $len_alphanum = strlen($alphanum);
+                $var = 'var-';
+                for ($i = 0; $i <JIRAFEAU_VAR_RAND_LENGTH; $i++) {
+                    $var .= substr($alphanum, mt_rand(0, $len_alphanum - 1), 1);
+                }
+                echo JIRAFEAU_ROOT . $var . '/';
+            } else {
+                echo $cfg['var_root'];
             }
-            echo JIRAFEAU_ROOT . $var . '/';
-        } else {
-            echo $cfg['var_root'];
-        }
-      ?>" size = "40" /></td>
+        ?>" size = "40" /></td>
         </tr> <tr> <td colspan = "2"><input type = "submit"
         class = "navleft" name = "previous" value = "<?php
-        echo t('PREV_STEP'); ?>" />
+          echo t('PREV_STEP'); ?>" />
          <input type = "submit" class = "navright" name = "next" value = 
         "<?php echo t('NEXT_STEP'); ?>" />
         </td> </tr> </table> </fieldset>
         </form> </div> <?php
 break;
 
-case 3:
-    ?><h2><?php printf(t('JI_INSTALL') . ' - ' . t('STEP') .
-    ' %d ' . t('OUT_OF') . ' %d', 3, 3);
-    ?></h2> <div id = "install"> <form method="post"> <input type =
+    case 3:
+        ?><h2><?php printf(t('JI_INSTALL') . ' - ' . t('STEP') .
+        ' %d ' . t('OUT_OF') . ' %d', 3, 3);
+        ?></h2> <div id = "install"> <form method="post"> <input type =
         "hidden" name = "jirafeau" value =
         "<?php echo JIRAFEAU_VERSION; ?>" /><input type = "hidden" name =
         "step" value =
         "3" /><fieldset> <legend><?php echo t('FINALIZATION');
-    ?></legend> <table> <tr> <td class = "info" colspan =
+        ?></legend> <table> <tr> <td class = "info" colspan =
         "2"><?php echo t('SETTING_UP');
-    ?></td> </tr> <tr> <td class = "nav previous"><input type =
+        ?></td> </tr> <tr> <td class = "nav previous"><input type =
         "submit" name = "previous" value = " <?php echo t('PREV_STEP');
-    ?>" /></td> <td></td> </tr>
+        ?>" /></td> <td></td> </tr>
         </table> </fieldset> </form> </div>
     <?php
-    $err = jirafeau_check_var_dir($cfg['var_root']);
-    if ($err['has_error']) {
-        echo '<div class="error"><p>'.$err['why'].'<br />'.NL; ?><form method="post"> <input type = "hidden" name = "jirafeau" value =
+        $err = jirafeau_check_var_dir($cfg['var_root']);
+        if ($err['has_error']) {
+            echo '<div class="error"><p>'.$err['why'].'<br />'.NL; ?><form method="post"> <input type = "hidden" name = "jirafeau" value =
             "<?php echo JIRAFEAU_VERSION; ?>" /><input type = "hidden" name =
             "step" value = "3" /><input type = "submit" name =
             "retry" value =
             "<?php echo t('RETRY_STEP'); ?>" /></form>
             <?php echo '</p></div>';
-    } else {
-        $cfg['installation_done'] = true;
-        jirafeau_export_cfg($cfg);
-        echo '<div class="message"><p>' .
-             t('JI_FONCTIONAL') . ':' .
-             '<br /><a href="./">' .
-             $cfg['web_root'].'</a></p></div>';
-    }
-break;
+        } else {
+            $cfg['installation_done'] = true;
+            jirafeau_export_cfg($cfg);
+            echo '<div class="message"><p>' .
+                 t('JI_FONCTIONAL') . ':' .
+                 '<br /><a href="./">' .
+                 $cfg['web_root'].'</a></p></div>';
+        }
+        break;
 }
 
 require(JIRAFEAU_ROOT . 'lib/template/footer.php');

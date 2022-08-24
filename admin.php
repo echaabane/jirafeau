@@ -117,9 +117,9 @@ if (php_sapi_name() == "cli") {
     /* Show admin interface if not downloading a file. */
     if (!(isset($_POST['action']) && strcmp($_POST['action'], 'download') == 0)) {
         require(JIRAFEAU_ROOT . 'lib/template/header.php'); ?><h2><?php echo t('ADMIN_INTERFACE'); ?></h2><?php
-          ?><h2>(version <?php echo JIRAFEAU_VERSION ?>)</h2><?php
+        ?><h2>(version <?php echo JIRAFEAU_VERSION ?>)</h2><?php
 
-          ?><div id = "admin">
+        ?><div id = "admin">
           <fieldset><legend><?php echo t('ACTIONS'); ?></legend>
           <table>
           <form method="post">

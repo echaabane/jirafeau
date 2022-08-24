@@ -41,7 +41,8 @@ if (isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
 
 /* Check if user is allowed to upload. */
 // First check: Is user already logged
-if (jirafeau_user_session_logged()) {}
+if (jirafeau_user_session_logged()) {
+}
 // Second check: Challenge by IP NO PASSWORD
 elseif (true === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
     jirafeau_user_session_start();
@@ -108,7 +109,7 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     </div>
 
     <?php if ($cfg['preview'] == true) {
-    ?>
+        ?>
     <div id="upload_finished_preview">
     <p>
         <a id="preview_link" href=""><?php echo t('VIEW_LINK') ?></a>
@@ -118,7 +119,7 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     </p>
     </div>
     <?php
-} ?>
+    } ?>
 
     <div id="upload_direct_download">
     <p>
@@ -164,22 +165,22 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     <p>
         <input type="file" id="file_select" size="30"
     onchange="control_selected_file_size(<?php echo $cfg['maximal_upload_size'] ?>, '<?php
-        if ($cfg['maximal_upload_size'] >= 1024) {
-            echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . number_format($cfg['maximal_upload_size']/1024, 2) . " GB.";
-        } elseif ($cfg['maximal_upload_size'] > 0) {
-            echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . $cfg['maximal_upload_size'] . " MB.";
-        }
-    ?>')"/>
+            if ($cfg['maximal_upload_size'] >= 1024) {
+                echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . number_format($cfg['maximal_upload_size']/1024, 2) . " GB.";
+            } elseif ($cfg['maximal_upload_size'] > 0) {
+                echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . $cfg['maximal_upload_size'] . " MB.";
+            }
+?>')"/>
     </p>
 
     <div id="options">
         <table id="option_table">
         <?php
-        if ($cfg['one_time_download']) {
-            echo '<tr><td>' . t('ONE_TIME_DL') . ':</td>';
-            echo '<td><input type="checkbox" id="one_time_download" /></td></tr>';
-        }
-        ?>
+    if ($cfg['one_time_download']) {
+        echo '<tr><td>' . t('ONE_TIME_DL') . ':</td>';
+        echo '<td><input type="checkbox" id="one_time_download" /></td></tr>';
+    }
+?>
         <tr>
         <td><label for="input_key"><?php echo t('PSW') . ':'; ?></label></td>
         <td><input type="password" name="key" id="input_key" autocomplete = "new-password"/></td>
@@ -188,66 +189,66 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
         <td><label for="select_time"><?php echo t('TIME_LIM') . ':'; ?></label></td>
         <td><select name="time" id="select_time">
         <?php
-        $expirationTimeOptions = array(
-          array(
-            'value' => 'minute',
-            'label' => '1_MIN'
-          ),
-          array(
-            'value' => 'hour',
-            'label' => '1_H'
-          ),
-          array(
-            'value' => 'day',
-            'label' => '1_D'
-          ),
-          array(
-            'value' => 'week',
-            'label' => '1_W'
-          ),
-          array(
-              'value' => 'fortnight',
-              'label' => '2_W'
-          ),
-          array(
-            'value' => 'month',
-            'label' => '1_M'
-          ),
-          array(
-            'value' => 'quarter',
-            'label' => '1_Q'
-          ),
-          array(
-            'value' => 'year',
-            'label' => '1_Y'
-          ),
-          array(
-            'value' => 'none',
-            'label' => 'NONE'
-          )
-        );
-        foreach ($expirationTimeOptions as $expirationTimeOption) {
-            $selected = ($expirationTimeOption['value'] === $cfg['availability_default'])? 'selected="selected"' : '';
-            if (true === $cfg['availabilities'][$expirationTimeOption['value']]) {
-                echo '<option value="' . $expirationTimeOption['value'] . '" ' .
+$expirationTimeOptions = array(
+  array(
+    'value' => 'minute',
+    'label' => '1_MIN'
+  ),
+  array(
+    'value' => 'hour',
+    'label' => '1_H'
+  ),
+  array(
+    'value' => 'day',
+    'label' => '1_D'
+  ),
+  array(
+    'value' => 'week',
+    'label' => '1_W'
+  ),
+  array(
+      'value' => 'fortnight',
+      'label' => '2_W'
+  ),
+  array(
+    'value' => 'month',
+    'label' => '1_M'
+  ),
+  array(
+    'value' => 'quarter',
+    'label' => '1_Q'
+  ),
+  array(
+    'value' => 'year',
+    'label' => '1_Y'
+  ),
+  array(
+    'value' => 'none',
+    'label' => 'NONE'
+  )
+);
+foreach ($expirationTimeOptions as $expirationTimeOption) {
+    $selected = ($expirationTimeOption['value'] === $cfg['availability_default'])? 'selected="selected"' : '';
+    if (true === $cfg['availabilities'][$expirationTimeOption['value']]) {
+        echo '<option value="' . $expirationTimeOption['value'] . '" ' .
               $selected . '>' . t($expirationTimeOption['label']) . '</option>';
-            }
-        }
-        ?>
+    }
+}
+?>
         </select></td>
         </tr>
 
         <?php
-        if ($cfg['maximal_upload_size'] >= 1024) {
-            echo '<p class="config">' . t('FILE_LIM');
-            echo " " . number_format($cfg['maximal_upload_size'] / 1024, 2) . " GB.</p>";
-        } elseif ($cfg['maximal_upload_size'] > 0) {
-            echo '<p class="config">' . t('FILE_LIM');
-            echo " " . $cfg['maximal_upload_size'] . " MB.</p>";
-        } else {
-            echo '<p class="config"></p>';
-        }
-        ?>
+if ($cfg['maximal_upload_size'] >= 1024) {
+    echo '<p class="config">' . t('FILE_LIM');
+    echo " " . number_format($cfg['maximal_upload_size'] / 1024, 2) . " GB.</p>";
+} elseif ($cfg['maximal_upload_size'] > 0) {
+    echo '<p class="config">' . t('FILE_LIM');
+    echo " " . $cfg['maximal_upload_size'] . " MB.</p>";
+} else {
+    echo '<p class="config"></p>';
+}
+?>
 
         <p id="max_file_size" class="config"></p>
     <p>
@@ -263,14 +264,14 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
 
     <?php
     if (jirafeau_user_session_logged()) {
-    ?>
+        ?>
     <form method="post" class="form logout">
         <input type = "hidden" name = "action" value = "logout"/>
         <input type = "submit" value = "<?php echo t('LOGOUT'); ?>" />
     </form>
     <?php
     }
-    ?>
+?>
 
 </div>
 
@@ -283,11 +284,11 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     document.getElementById('send').style.display = 'none';
     if (!check_html5_file_api ())
         document.getElementById('max_file_size').innerHTML = '<?php
-            $max_size = jirafeau_get_max_upload_size();
-            if ($max_size > 0) {
-                echo t('NO_BROWSER_SUPPORT') . $max_size;
-            }
-        ?>';
+        $max_size = jirafeau_get_max_upload_size();
+if ($max_size > 0) {
+    echo t('NO_BROWSER_SUPPORT') . $max_size;
+}
+?>';
 
     addCopyListener('upload_link_button', 'upload_link');
     addCopyListener('preview_link_button', 'preview_link');
