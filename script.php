@@ -62,20 +62,22 @@ if (has_error()) {
     exit;
 }
 
+session_start();
+
 /* Upload file */
 if (isset($_FILES['file']) && is_writable(VAR_FILES)
     && is_writable(VAR_LINKS)) {
-    if (isset($_POST['upload_password'])) {
-        if (!jirafeau_challenge_upload($cfg, get_ip_address($cfg), $_POST['upload_password'])) {
+    if (!jirafeau_user_session_logged()) {
+        if (isset($_POST['upload_password']) &&
+            !jirafeau_challenge_upload($cfg, get_ip_address($cfg), $_POST['upload_password'])) {
             echo 'Error 3: Invalid password';
             exit;
-        }
-    } else {
-        if (!jirafeau_challenge_upload($cfg, get_ip_address($cfg), null)) {
+        } elseif (!jirafeau_challenge_upload($cfg, get_ip_address($cfg), null)) {
             echo 'Error 2: No password nor allowed IP';
             exit;
         }
     }
+
     $key = '';
     if (isset($_POST['key'])) {
         $key = $_POST['key'];
@@ -135,7 +137,7 @@ if (isset($_FILES['file']) && is_writable(VAR_FILES)
     } else {
         $ip = "";
     }
-    
+
     $res = jirafeau_upload(
         $_FILES['file'],
         isset($_POST['one_time_download']),
@@ -405,7 +407,8 @@ fi
 }
 /* Initialize an asynchronous upload. */
 elseif (isset($_GET['init_async'])) {
-    if (isset($_POST['upload_password'])) {
+    if (jirafeau_user_session_logged()) {}
+    elseif (isset($_POST['upload_password'])) {
         if (!jirafeau_challenge_upload($cfg, get_ip_address($cfg), $_POST['upload_password'])) {
             echo 'Error 20: Invalid password';
             exit;
@@ -479,7 +482,7 @@ elseif (isset($_GET['init_async'])) {
     } else {
         $ip = "";
     }
-    
+
     echo jirafeau_async_init(
         $_POST['filename'],
         $type,

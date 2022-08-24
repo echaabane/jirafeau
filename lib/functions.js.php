@@ -24,6 +24,7 @@ define('JIRAFEAU_ROOT', dirname(__FILE__) . '/../');
 require(JIRAFEAU_ROOT . 'lib/settings.php');
 require(JIRAFEAU_ROOT . 'lib/functions.php');
 require(JIRAFEAU_ROOT . 'lib/lang.php');
+
 ?>
 // @license magnet:?xt=urn:btih:0b31508aeb0634b347b8270c7bee4d411b5d4109&dn=agpl-3.0.txt AGPL-v3-or-Later
 var web_root = "<?php echo $cfg['web_root']; ?>";
@@ -344,7 +345,7 @@ function add_time_string_to_date(d, time)
     return false;
 }
 
-function classic_upload (file, time, password, one_time, upload_password)
+function classic_upload (file, time, password, one_time)
 {
     // Delay time estimation init as we can't have file size
     upload_time_estimation_init(0);
@@ -397,9 +398,6 @@ function classic_upload (file, time, password, one_time, upload_password)
         form.append ("key", password);
     if (one_time)
         form.append ("one_time_download", '1');
-    if (upload_password.length > 0)
-        form.append ("upload_password", upload_password);
-
     req.send (form);
 }
 
@@ -416,7 +414,7 @@ var async_global_time;
 var async_global_transfering = 0;
 var async_global_last_code;
 
-function async_upload_start (max_size, file, time, password, one_time, upload_password)
+function async_upload_start (max_size, file, time, password, one_time)
 {
     async_global_transfered = 0;
     async_global_file = file;
@@ -455,8 +453,6 @@ function async_upload_start (max_size, file, time, password, one_time, upload_pa
         form.append ("key", password);
     if (one_time)
         form.append ("one_time_download", '1');
-    if (upload_password.length > 0)
-        form.append ("upload_password", upload_password);
 
     // Start time estimation
     upload_time_estimation_init(async_global_file.size);
@@ -607,8 +603,7 @@ function upload (max_chunk_size)
             document.getElementById('file_select').files[0],
             document.getElementById('select_time').value,
             document.getElementById('input_key').value,
-            one_time,
-            document.getElementById('upload_password').value
+            one_time
             );
     }
     else
@@ -617,8 +612,7 @@ function upload (max_chunk_size)
             document.getElementById('file_select').files[0],
             document.getElementById('select_time').value,
             document.getElementById('input_key').value,
-            one_time,
-            document.getElementById('upload_password').value
+            one_time
             );
     }
 }
@@ -807,7 +801,7 @@ function set_light_mode() {
 }
 
 function color_scheme_preferences() {
-    
+
     let dark_mode_steel_sheet = "<?php echo 'media/' . $cfg['dark_style'] . '/style.css.php'; ?>"
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         set_dark_mode();

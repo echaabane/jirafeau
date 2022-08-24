@@ -57,7 +57,7 @@ if (php_sapi_name() == "cli") {
 
     /* Logout if requested. */
     if (jirafeau_admin_session_logged() && isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
-        jirafeau_admin_session_end();
+        jirafeau_session_end();
     }
 
     if (!jirafeau_admin_session_logged()) {

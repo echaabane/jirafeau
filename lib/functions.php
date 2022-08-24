@@ -1476,7 +1476,7 @@ function jirafeau_admin_session_start()
     $_SESSION['admin_csrf'] = md5(uniqid(mt_rand(), true));
 }
 
-function jirafeau_admin_session_end()
+function jirafeau_session_end()
 {
     $_SESSION = array();
     session_destroy();
@@ -1494,6 +1494,17 @@ function jirafeau_admin_session_logged()
 function jirafeau_admin_csrf_field()
 {
     return "<input type='hidden' name='admin_csrf' value='". $_SESSION['admin_csrf'] . "'/>";
+}
+
+function jirafeau_user_session_start()
+{
+    $_SESSION['user_auth'] = true;
+}
+
+function jirafeau_user_session_logged()
+{
+    return isset($_SESSION['user_auth']) &&
+        $_SESSION['user_auth'] === true;
 }
 
 function jirafeau_dir_size($dir)

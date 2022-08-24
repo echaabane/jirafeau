@@ -32,39 +32,36 @@ if (has_error()) {
     require(JIRAFEAU_ROOT . 'lib/template/footer.php');
     exit;
 }
-
 require(JIRAFEAU_ROOT . 'lib/template/header.php');
 
-/* Check if user is allowed to upload. */
-// First check: Challenge by IP NO PASSWORD
-if (true === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
-    $_SESSION['upload_auth'] = true;
-    $_POST['upload_password'] = '';
-    $_SESSION['user_upload_password'] = $_POST['upload_password'];
+// Logout action
+if (isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
+    jirafeau_session_end();
 }
-// Second check: Challenge by IP
+
+/* Check if user is allowed to upload. */
+// First check: Is user already logged
+if (jirafeau_user_session_logged()) {}
+// Second check: Challenge by IP NO PASSWORD
+elseif (true === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
+    jirafeau_user_session_start();
+}
+// Third check: Challenge by IP
 elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     // Is an upload password required?
     if (jirafeau_has_upload_password($cfg)) {
-        // Logout action
-        if (isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
-            session_unset();
-        }
-
         // Challenge by password
-        // …save successful logins in session
         if (isset($_POST['upload_password'])) {
             if (jirafeau_challenge_upload_password($cfg, $_POST['upload_password'])) {
-                $_SESSION['upload_auth'] = true;
-                $_SESSION['user_upload_password'] = $_POST['upload_password'];
+                jirafeau_user_session_start();
             } else {
-                $_SESSION['admin_auth'] = false;
+                jirafeau_session_end();
                 jirafeau_fatal_error(t('BAD_PSW'), $cfg);
             }
         }
 
         // Show login form if user session is not authorized yet
-        if (true === empty($_SESSION['upload_auth'])) {
+        if (!jirafeau_user_session_logged()) {
             ?>
             <form method="post" class="form login">
             <fieldset>
@@ -81,8 +78,7 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
                 </tr>
                 <tr class = "nav">
                     <td class = "nav next">
-                    <input type = "submit" name = "key" value =
-                    "<?php echo t('LOGIN'); ?>" />
+                    <input type = "submit" name = "key" value = "<?php echo t('LOGIN'); ?>" />
                     </td>
                 </tr>
                 </table>
@@ -255,17 +251,6 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
 
         <p id="max_file_size" class="config"></p>
     <p>
-    <?php
-    if (jirafeau_has_upload_password($cfg) && $_SESSION['upload_auth']) {
-        ?>
-    <input type="hidden" id="upload_password" name="upload_password" value="<?php echo $_SESSION['user_upload_password'] ?>"/>
-    <?php
-    } else {
-        ?>
-    <input type="hidden" id="upload_password" name="upload_password" value=""/>
-    <?php
-    }
-    ?>
     <input type="submit" id="send" value="<?php echo t('SEND'); ?>"
     onclick="
         document.getElementById('upload').style.display = 'none';
@@ -277,9 +262,8 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     </div> </fieldset>
 
     <?php
-    if (jirafeau_has_upload_password($cfg)
-        && false === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
-        ?>
+    if (jirafeau_user_session_logged()) {
+    ?>
     <form method="post" class="form logout">
         <input type = "hidden" name = "action" value = "logout"/>
         <input type = "submit" value = "<?php echo t('LOGOUT'); ?>" />
