@@ -222,3 +222,14 @@ $cfg['debug'] = false;
  * Set to 0 to remove limitation.
  */
 $cfg['max_upload_chunk_size_bytes'] = 100000000; // 100MB
+
+/** Enable LDAP authentication for uploaders
+ * Cannot be used with 'upload_password' or 'upload_ip_nopassword' options.
+ */
+$cfg['upload_ldap_auth'] = false;
+
+/** LDAP host to reach when 'upload_ldap_auth' is enabled */
+$cfg['upload_ldap_host'] = "";
+
+/** LDAP Base DN to authenticate users with 'upload_ldap_auth' option enabled*/
+$cfg['upload_ldap_base_dn'] = "dc=jirafeau,dc=net";

@@ -142,6 +142,11 @@ function jirafeau_fatal_error($errorText, $cfg = array())
     exit;
 }
 
+function jirafeau_non_fatal_error($errorText)
+{
+    echo '<div class="error"><p>' . $errorText . '</p></div>';
+}
+
 function jirafeau_clean_rm_link($link)
 {
     $p = s2p("$link");
@@ -618,6 +623,14 @@ function check_errors($cfg)
 
     if ($cfg['one_time_download'] && $cfg['litespeed_workaround']) {
         add_error(t('INCOMPATIBLE_OPTIONS_W'), 'one_time_download=true<br>litespeed_workaround=true');
+    }
+    if ($cfg['upload_ldap_auth'] === true) {
+        if (sizeof($cfg['upload_password']) > 0) {
+            add_error(t('INCOMPATIBLE_OPTIONS_W'), 'upload_ldap_auth=true<br>sizeof(upload_password) > 0');
+        }
+        if (sizeof($cfg['upload_ip_nopassword']) > 0) {
+            add_error(t('INCOMPATIBLE_OPTIONS_W'), 'upload_ldap_auth=true<br>sizeof(upload_ip_nopassword) > 0');
+        }
     }
 }
 
@@ -1586,4 +1599,50 @@ function jirafeau_add_ending_slash($path)
 function jirafeau_default_web_root()
 {
     return $_SERVER['HTTP_HOST'] . str_replace('install.php', '', $_SERVER['REQUEST_URI']);
+}
+
+function jirafeau_has_ldap_auth($cfg)
+{
+    return $cfg['upload_ldap_auth'] === true;
+}
+
+function jirafeau_challenge_ldap_auth($cfg, $user, $password)
+{
+    if (!jirafeau_has_ldap_auth($cfg)) {
+        return "upload_ldap_auth not set";
+    }
+    if (strlen($cfg['upload_ldap_host']) == 0) {
+        return "upload_ldap_host not set";
+    }
+    if (strlen($cfg['upload_ldap_base_dn']) == 0) {
+        return "upload_ldap_base_dn not set";
+    }
+    $host = $cfg['upload_ldap_host'];
+    $base_dn = $cfg['upload_ldap_base_dn'];
+    $con = ldap_connect("ldap://$host");
+    $ldap_user = "cn=$user,$base_dn";
+    if (!$con) {
+        return "cannot initiate connection to ldap server";
+    }
+    ldap_set_option($con, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($con, LDAP_OPT_REFERRALS, 0);
+    $bind = ldap_bind_ext($con, $ldap_user, $password, [['oid' => LDAP_CONTROL_PASSWORDPOLICYREQUEST]]);
+    if (!$bind) {
+        ldap_close($con);
+        return "cannot bind to ldap server";
+    }
+    $parsing = ldap_parse_result($con, $bind, $errcode, $matcheddn, $errmsg, $referrals, $ctrls);
+    if (!$parsing) {
+        ldap_close($con);
+        return "cannot parlse ldap results";
+    }
+    if ($errcode == 49) {
+        ldap_close($con);
+        return "bad password";
+    }
+    if ($errcode != 0) {
+        ldap_close($con);
+        return "ldap auth error: $errmsg ($errcode)";
+    }
+    return true;
 }

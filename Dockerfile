@@ -3,7 +3,9 @@ LABEL org.opencontainers.image.authors="jerome@jutteau.fr"
 
 # base install
 RUN apk update && \
-    apk add lighttpd && \
+    apk add lighttpd openldap-dev && \
+    docker-php-ext-install ldap && \
+    docker-php-ext-enable  ldap && \
     rm -rf /var/cache/apk/* && \
     ln -snf /usr/share/zoneinfo/Etc/UTC /etc/localtime  && \
     echo "UTC" > /etc/timezone

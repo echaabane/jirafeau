@@ -52,6 +52,9 @@ Available options:
 - `UPLOAD_IP_NO_PASSWORD`: set one or more ip allowed to upload files without password (separated by comma).
 - `PROXY_IP`: set one or more proxy ip (separated by comma).
 - `STORE_UPLOADER_IP`: set to 1 or 0 to enable or disable keeping sender's IP with the _link_ file.
+- `UPLOAD_LDAP_AUTH`: set 1 or 0 to enable or disable LDAP authentication.
+- `UPLOAD_LDAP_HOST`: set LDAP host to contact (with `UPLOAD_LDAP_AUTH=1`)
+- `UPLOAD_LDAP_BASE_DN`: set LDAP base DN to use (with `UPLOAD_LDAP_AUTH=1`)
 
 Example:
 ```

@@ -40,14 +40,60 @@ if (isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
 }
 
 /* Check if user is allowed to upload. */
-// First check: Is user already logged
+// check if user already logged
 if (jirafeau_user_session_logged()) {
 }
-// Second check: Challenge by IP NO PASSWORD
+// check of ldap authentication
+elseif (jirafeau_has_ldap_auth($cfg)) {
+    if (isset($_POST['ldap_user']) and isset($_POST['ldap_password'])) {
+        $result = jirafeau_challenge_ldap_auth($cfg, $_POST['ldap_user'], $_POST['ldap_password']);
+        if (true === $result) {
+            jirafeau_user_session_start();
+        } else {
+            jirafeau_session_end();
+            jirafeau_non_fatal_error(t('BAD_PSW'));
+        }
+    }
+    // Show login form if user session is not authorized yet
+    if (!jirafeau_user_session_logged()) {
+        ?>
+        <form method="post" class="form login">
+            <fieldset>
+            <table>
+            <tr>
+              <td class = "label"><label for = "enter_user">
+              <?php echo t('UP_USER') . ':'; ?></label>
+              </td>
+            </tr><tr>
+              <td class = "field">
+                <input type="text" name="ldap_user" id="ldap_user" size="40" autocomplete="ldap-user"/>
+               </td>
+            </tr><tr>
+              <td class="label"><label for="enter_password">
+              <?php echo t('PASSWORD') . ':'; ?></label>
+              </td>
+            </tr><tr>
+              <td class="field">
+                <input type="password" name="ldap_password" id="ldap_password" size="40" autocomplete="ldap-password" />
+              </td>
+            </tr><tr class = "nav">
+              <td class = "nav next">
+                <input type="submit" name="key" value="<?php echo t('LOGIN'); ?>"/>
+              </td>
+            </tr>
+          </table>
+          </fieldset>
+       </form>
+<?php
+        require(JIRAFEAU_ROOT.'lib/template/footer.php');
+        exit;
+    }
+}
+// Allow certains IP to upload with no password
 elseif (true === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
     jirafeau_user_session_start();
 }
-// Third check: Challenge by IP
+// Challenge by IP
 elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     // Is an upload password required?
     if (jirafeau_has_upload_password($cfg)) {

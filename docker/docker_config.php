@@ -175,6 +175,9 @@ function run_setup(&$cfg)
     env_2_cfg_string_array($cfg, 'upload_ip_nopassword');
     env_2_cfg_string_array($cfg, 'proxy_ip');
     env_2_cfg_bool($cfg, 'store_uploader_ip');
+    env_2_cfg_bool($cfg, 'upload_ldap_auth');
+    env_2_cfg_string($cfg, 'upload_ldap_host');
+    env_2_cfg_string($cfg, 'upload_ldap_base_dn');
 
     if ($setup_ok) {
         $cfg['installation_done'] = true;

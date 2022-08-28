@@ -20,6 +20,7 @@ See [jirafeau.net](https://jirafeau.net/) for a demo.
 - Shows progression: speed, percentage and remaining upload time
 - Preview content in browser (if possible)
 - Optional password protection (for uploading or downloading)
+- LDAP authentication for uploaders
 - Set expiration time for downloads
 - Option to self-destruct after first download
 - Shortened URLs using base 64 encoding
@@ -291,6 +292,17 @@ When file deduplication feature is enabled, files with the same hash are not dup
 So:
 - The button "delete link" will delete the reference to the file but might not destroy the file.
 - The button "delete file and links" will delete all references pointing to the file and will destroy the file.
+
+### How can I setup LDAP authentication?
+
+LDAP authentication is disabled by default. To use it, you will need to install [PHP LDAP extension](https://www.php.net/manual/en/book.ldap.php) and edit your `lib/config.local.php` to set those options:
+- `upload_ldap_auth`: set it to `true`
+- `upload_ldap_host`: set it to your ldap host
+- `upload_ldap_base_dn`: set it to your base DN
+
+More details in [config.original.php](lib/config.original.php)'s documentation.
+
+Note that you can test around LDAP with [docker-compose example](./docker/docker-compose-examples/ldap/).
 
 ### How to contact someone from Jirafeau?
 

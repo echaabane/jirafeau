@@ -1,0 +1,43 @@
+version: '3.7'
+
+networks:
+  jirafeau:
+
+services:
+  openldap_server:
+    image: osixia/openldap:1.5.0
+    ports:
+      - "389:389"
+    environment:
+      LDAP_TLS: "false"
+      LDAP_ADMIN_PASSWORD: "admin"
+      LDAP_DOMAIN: "jirafeau.net"
+      LDAP_BASE_DN: "dc=jirafeau,dc=net"
+    volumes:
+      - 'openldap_data:/bitnami/openldap'
+    networks:
+      - jirafeau
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.7.2
+    ports:
+      - 8090:80
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap_server
+      PHPLDAPADMIN_HTTPS: "false"
+    networks:
+      - jirafeau
+  jirafeau:
+    image: mojo42/jirafeau:dev
+    ports:
+      - "8080:80"
+    environment:
+      DEBUG: 0
+      ADMIN_PASSWORD: "password"
+      UPLOAD_LDAP_AUTH: 1
+      UPLOAD_LDAP_HOST: openldap_server
+      UPLOAD_LDAP_BASE_DS: "dc=jirafeau,dc=net"
+    networks:
+      - jirafeau
+
+volumes:
+  openldap_data:

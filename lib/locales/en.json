@@ -1,4 +1,6 @@
 {
+    "PASSWORD": "Password",
+    "UP_USER": "User",
     "INSTALL_FILE_NOT_FOUND_TITLE": "Installation file not found",
     "INSTALL_FILE_NOT_FOUND_DESC": "Installation is not complete and install.php file does not seem to exist",
     "REPORTING_AN_ISSUE": "Reporting an issue",
