@@ -101,10 +101,8 @@ function jirafeau_gen_random($l)
     return $code;
 }
 
-function jirafeau_gen_download_pass()
+function jirafeau_gen_download_pass($length, $allowed_chars)
 {
-    $length = $cfg['download_password_gen_len'];
-    $allowed_chars = $cfg['download_password_gen_chars'];
     if ($length <= 0) {
         return false;
     }

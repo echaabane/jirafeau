@@ -26,7 +26,7 @@ require(JIRAFEAU_ROOT . 'lib/functions.php');
 require(JIRAFEAU_ROOT . 'lib/lang.php');
 
 if ($cfg['download_password_requirement'] === "generated"){
-    $download_pass = jirafeau_gen_download_pass();
+    $download_pass = jirafeau_gen_download_pass($cfg['download_password_gen_len'], $cfg['download_password_gen_chars']);
 }
 
 check_errors($cfg);
