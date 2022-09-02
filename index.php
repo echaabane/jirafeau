@@ -177,7 +177,12 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
 </div>
 
 <div id="upload">
-<fieldset>
+<form id="upload-form" onsubmit="
+            event.preventDefault();
+            document.getElementById('upload').style.display = 'none';
+            document.getElementById('uploading').style.display = '';
+            upload (<?php echo jirafeau_get_max_upload_chunk_size_bytes($cfg['max_upload_chunk_size_bytes']); ?>);
+            "><fieldset>
     <legend>
     <?php echo t('SEL_FILE'); ?>
     </legend>
@@ -279,15 +284,10 @@ if ($cfg['maximal_upload_size'] >= 1024) {
 
         <p id="max_file_size" class="config"></p>
     <p>
-    <input type="submit" id="send" value="<?php echo t('SEND'); ?>"
-    onclick="
-        document.getElementById('upload').style.display = 'none';
-        document.getElementById('uploading').style.display = '';
-        upload (<?php echo jirafeau_get_max_upload_chunk_size_bytes($cfg['max_upload_chunk_size_bytes']); ?>);
-    "/>
+    <input type="submit" id="send" value="<?php echo t('SEND'); ?>"/>
     </p>
         </table>
-    </div> </fieldset>
+    </div> </fieldset></form>
 
     <?php
     if (jirafeau_user_session_logged()) {
