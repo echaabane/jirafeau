@@ -101,6 +101,21 @@ function jirafeau_gen_random($l)
     return $code;
 }
 
+function jirafeau_gen_download_pass()
+{
+    $length = $cfg['download_password_gen_len'];
+    $allowed_chars = $cfg['download_password_gen_chars'];
+    if ($length <= 0) {
+        return false;
+    }
+    $pass="";
+    for ($i = 0; $i < $length; $i++) {
+        $pass .= $allowed_chars[rand(0, strlen($allowed_chars) - 1)];
+    }
+
+    return $pass;
+}
+
 function is_ssl()
 {
     if (isset($_SERVER['HTTPS'])) {

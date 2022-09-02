@@ -786,6 +786,21 @@ function addCopyListener(button_id, link_id) {
     }
 }
 
+function copyTextToClipboard(text_id){
+    var copyText = document.getElementById(text_id);
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); 
+    navigator.clipboard.writeText(copyText.value);
+}
+
+function addTextCopyListener(button_id, text_id) {
+    if(document.getElementById(button_id)){
+        document.getElementById(button_id)
+            .addEventListener("click", function() {
+                copyTextToClipboard(text_id);});
+    }
+}
+
 function set_dark_mode() {
     let steel_sheet = "<?php echo 'media/' . $cfg['dark_style'] . '/style.css.php'; ?>";
     let shortcut_icon = "<?php echo 'media/' . $cfg['dark_style'] . '/favicon.ico'; ?>";

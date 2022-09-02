@@ -25,6 +25,10 @@ require(JIRAFEAU_ROOT . 'lib/settings.php');
 require(JIRAFEAU_ROOT . 'lib/functions.php');
 require(JIRAFEAU_ROOT . 'lib/lang.php');
 
+if ($cfg['download_password_requirement'] === "generated"){
+    $download_pass = jirafeau_gen_download_pass();
+}
+
 check_errors($cfg);
 if (has_error()) {
     require(JIRAFEAU_ROOT . 'lib/template/header.php');
@@ -108,6 +112,21 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     </p>
     </div>
 
+    <?php if ($cfg['download_password_requirement'] === "generated"){
+    ?>
+    <div id="show_password">
+    <p><?php echo t('PSW') ?></p>
+
+    <div id="download_password">
+    <p>
+        <?php echo '<input id="output_key" value="' . $download_pass . '"/>'?>
+        <button id="password_copy_button">&#128203;</button>
+    </p>
+    </div>
+    </div>
+    <?php
+    }?>
+
     <?php if ($cfg['preview'] == true) {
         ?>
     <div id="upload_finished_preview">
@@ -176,15 +195,23 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     <div id="options">
         <table id="option_table">
         <?php
-    if ($cfg['one_time_download']) {
-        echo '<tr><td>' . t('ONE_TIME_DL') . ':</td>';
-        echo '<td><input type="checkbox" id="one_time_download" /></td></tr>';
-    }
-?>
-        <tr>
-        <td><label for="input_key"><?php echo t('PSW') . ':'; ?></label></td>
-        <td><input type="password" name="key" id="input_key" autocomplete = "new-password"/></td>
-        </tr>
+        if ($cfg['one_time_download']) {
+            echo '<tr><td>' . t('ONE_TIME_DL') . ':</td>';
+            echo '<td><input type="checkbox" id="one_time_download" /></td></tr>';
+        }
+        if ($cfg['download_password_requirement'] === 'generated'){
+            echo '<input type="hidden" name="key" id="input_key" value="' . $download_pass .'"/>';
+        }else{
+            echo '<tr><td><label for="input_key">' . t('PSW') . ':' . '</label></td>';
+            echo '<td><input type="password" name="key" id="input_key" autocomplete = "new-password"';
+            if ($cfg['download_password_policy'] === 'regex'){
+                echo ' pattern="' . substr($cfg['download_password_policy_regex'], 1, strlen($cfg['download_password_policy_regex']) - 2) . '"'; //remove php delimiters
+            }
+            if ($cfg['download_password_requirement'] === 'required'){
+                echo ' required';
+            }
+            echo '/></td></tr>';
+        }?>
         <tr>
         <td><label for="select_time"><?php echo t('TIME_LIM') . ':'; ?></label></td>
         <td><select name="time" id="select_time">
@@ -294,6 +321,7 @@ if ($max_size > 0) {
     addCopyListener('preview_link_button', 'preview_link');
     addCopyListener('direct_link_button', 'direct_link');
     addCopyListener('delete_link_button', 'delete_link');
+    addTextCopyListener('password_copy_button', 'output_key');
 // @license-end
 </script>
 <?php require(JIRAFEAU_ROOT . 'lib/template/footer.php'); ?>

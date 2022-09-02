@@ -175,6 +175,11 @@ function run_setup(&$cfg)
     env_2_cfg_string_array($cfg, 'upload_ip_nopassword');
     env_2_cfg_string_array($cfg, 'proxy_ip');
     env_2_cfg_bool($cfg, 'store_uploader_ip');
+    env_2_cfg_string($cfg, 'download_password_requirement');
+    env_2_cfg_int($cfg, 'download_password_gen_len');
+    env_2_cfg_string($cfg, 'download_password_gen_chars');
+    env_2_cfg_string($cfg, 'download_password_policy');
+    env_2_cfg_string($cfg, 'download_password_policy_regex');
 
     if ($setup_ok) {
         $cfg['installation_done'] = true;
