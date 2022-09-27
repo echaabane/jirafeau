@@ -41,7 +41,8 @@ Available options:
 - `TITLE`: set Jirafeau instance title.
 - `ORGANISATION`: set organisation (in ToS).
 - `CONTACTPERSON`: set contact person (in ToS).
-- `STYLE`: apply a specific style.
+- `STYLE`: apply a specific style from the media folder.
+- `DARK_STYLE`: apply a specific style for browsers in dark mode.
 - `AVAILABILITY_DEFAULT`: setup which availability shows by default.
 - `ONE_TIME_DOWNLOAD`: set to 1 or 0 to enable or disable one time downloads.
 - `ENABLE_CRYPT`: set to 1 or 0 to enable or disable server side encryption.

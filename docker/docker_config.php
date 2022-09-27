@@ -161,11 +161,12 @@ function run_setup(&$cfg)
     setup_webroot($cfg);
     env_2_cfg_string($cfg, 'file_hash');
     env_2_cfg_bool($cfg, 'preview');
-    env_2_cfg_bool($cfg, 'title');
+    env_2_cfg_string($cfg, 'title', false);
     env_2_cfg_string($cfg, 'organisation');
     env_2_cfg_string($cfg, 'contactperson');
     env_2_cfg_string($cfg, 'style');
     env_2_cfg_string($cfg, 'availability_default');
+    env_2_cfg_string($cfg, 'dark_style');
     env_2_cfg_bool($cfg, 'one_time_download');
     env_2_cfg_bool($cfg, 'enable_crypt');
     env_2_cfg_bool($cfg, 'debug');
