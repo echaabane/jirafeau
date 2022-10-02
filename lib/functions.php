@@ -161,6 +161,9 @@ function jirafeau_clean_rm_link($link)
     if (file_exists(VAR_LINKS . $p . $link)) {
         unlink(VAR_LINKS . $p . $link);
     }
+    if (file_exists(VAR_LINKS . $p . $link . '_download')) {
+        unlink(VAR_LINKS . $p . $link . '_download');
+    }
     $parse = VAR_LINKS . $p;
     $scan = array();
     while (file_exists($parse)
@@ -706,6 +709,7 @@ function jirafeau_admin_list($name, $file_hash, $link_hash)
                 if (!count($l)) {
                     continue;
                 }
+                $ld = jirafeau_get_download_stats($node);
 
                 /* Filter. */
                 if (!empty($name) && !@preg_match("/$name/i", jirafeau_escape($l['file_name']))) {
@@ -729,6 +733,11 @@ function jirafeau_admin_list($name, $file_hash, $link_hash)
                 echo t('UPLOAD_DATE') . ': ' . jirafeau_get_datetimefield($l['upload_date']) . '<br/>';
                 if (strlen($l['ip']) > 0) {
                     echo t('ORIGIN') . ': ' . $l['ip'] . '<br/>';
+                }
+                echo t('DOWNLOAD_COUNT') . ': ' . $ld['count'] . '<br/>';
+                if ($ld['count'] > 0) {
+                    echo t('DOWNLOAD_DATE') . ': ' . jirafeau_get_datetimefield($ld['date']) . '<br/>';
+                    echo t('DOWNLOAD_IP') . ': ' . $ld['ip'] . '<br/>';
                 }
                 echo '</td><td>';
                 echo '<form method="post">' .
@@ -1602,4 +1611,33 @@ function jirafeau_add_ending_slash($path)
 function jirafeau_default_web_root()
 {
     return $_SERVER['HTTP_HOST'] . str_replace('install.php', '', $_SERVER['REQUEST_URI']);
+}
+
+function jirafeau_get_download_stats($hash)
+{
+    $filename = VAR_LINKS . s2p("$hash") . $hash . '_download';
+
+    if (!file_exists($filename)) {
+        return array('count'=>0);
+    }
+
+    $c = file($filename);
+    $data['count'] = trim($c[0]);
+    $data['date'] = trim($c[1]);
+    $data['ip'] = trim($c[2]);
+
+    return $data;
+}
+
+function jirafeau_write_download_stats($hash, $ip)
+{
+    $data = jirafeau_get_download_stats($hash);
+    $count = $data['count'];
+    $count++;
+
+    $filename = VAR_LINKS . s2p("$hash") . $hash . '_download';
+
+    $handle = fopen($filename, 'w');
+    fwrite($handle, $count . NL . time() . NL . $ip);
+    fclose($handle);
 }
