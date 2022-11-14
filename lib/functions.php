@@ -1205,10 +1205,13 @@ function jirafeau_encrypt_file($fp_src, $fp_dst)
     /* Crypt file. */
     $r = fopen($fp_src, 'r');
     $w = fopen($fp_dst, 'c');
-    while (!feof($r)) {
-        $enc = mcrypt_generic($m, fread($r, 1024));
-        if (fwrite($w, $enc) === false) {
-            return '';
+    while (!feof($r)) { 
+        $to_enc = fread($r, 1024);
+        if (strlen($to_enc) > 0) {
+            $enc = mcrypt_generic($m, $to_enc);
+            if (fwrite($w, $enc) === false) {
+                return '';
+            }
         }
     }
     fclose($r);
