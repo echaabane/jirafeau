@@ -805,14 +805,14 @@ function set_dark_mode() {
     let steel_sheet = "<?php echo 'media/' . $cfg['dark_style'] . '/style.css.php'; ?>";
     let shortcut_icon = "<?php echo 'media/' . $cfg['dark_style'] . '/favicon.ico'; ?>";
     document.getElementById('stylesheet').href = steel_sheet;
-    document.getElementById('shortcut_icon').href = steel_sheet;
+    document.getElementById('shortcut_icon').href = shortcut_icon;
 }
 
 function set_light_mode() {
     let steel_sheet = "<?php echo 'media/' . $cfg['style'] . '/style.css.php'; ?>";
     let shortcut_icon = "<?php echo 'media/' . $cfg['style'] . '/favicon.ico'; ?>";
     document.getElementById('stylesheet').href = steel_sheet;
-    document.getElementById('shortcut_icon').href = steel_sheet;
+    document.getElementById('shortcut_icon').href = shortcut_icon;
 }
 
 function color_scheme_preferences() {
