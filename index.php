@@ -25,6 +25,10 @@ require(JIRAFEAU_ROOT . 'lib/settings.php');
 require(JIRAFEAU_ROOT . 'lib/functions.php');
 require(JIRAFEAU_ROOT . 'lib/lang.php');
 
+if ($cfg['download_password_requirement'] === "generated"){
+    $download_pass = jirafeau_gen_download_pass($cfg['download_password_gen_len'], $cfg['download_password_gen_chars']);
+}
+
 check_errors($cfg);
 if (has_error()) {
     require(JIRAFEAU_ROOT . 'lib/template/header.php');
@@ -32,39 +36,37 @@ if (has_error()) {
     require(JIRAFEAU_ROOT . 'lib/template/footer.php');
     exit;
 }
-
 require(JIRAFEAU_ROOT . 'lib/template/header.php');
 
-/* Check if user is allowed to upload. */
-// First check: Challenge by IP NO PASSWORD
-if (true === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
-    $_SESSION['upload_auth'] = true;
-    $_POST['upload_password'] = '';
-    $_SESSION['user_upload_password'] = $_POST['upload_password'];
+// Logout action
+if (isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
+    jirafeau_session_end();
 }
-// Second check: Challenge by IP
+
+/* Check if user is allowed to upload. */
+// First check: Is user already logged
+if (jirafeau_user_session_logged()) {
+}
+// Second check: Challenge by IP NO PASSWORD
+elseif (true === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
+    jirafeau_user_session_start();
+}
+// Third check: Challenge by IP
 elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     // Is an upload password required?
     if (jirafeau_has_upload_password($cfg)) {
-        // Logout action
-        if (isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
-            session_unset();
-        }
-
         // Challenge by password
-        // …save successful logins in session
         if (isset($_POST['upload_password'])) {
             if (jirafeau_challenge_upload_password($cfg, $_POST['upload_password'])) {
-                $_SESSION['upload_auth'] = true;
-                $_SESSION['user_upload_password'] = $_POST['upload_password'];
+                jirafeau_user_session_start();
             } else {
-                $_SESSION['admin_auth'] = false;
+                jirafeau_session_end();
                 jirafeau_fatal_error(t('BAD_PSW'), $cfg);
             }
         }
 
         // Show login form if user session is not authorized yet
-        if (true === empty($_SESSION['upload_auth'])) {
+        if (!jirafeau_user_session_logged()) {
             ?>
             <form method="post" class="form login">
             <fieldset>
@@ -81,8 +83,7 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
                 </tr>
                 <tr class = "nav">
                     <td class = "nav next">
-                    <input type = "submit" name = "key" value =
-                    "<?php echo t('LOGIN'); ?>" />
+                    <input type = "submit" name = "key" value = "<?php echo t('LOGIN'); ?>" />
                     </td>
                 </tr>
                 </table>
@@ -111,8 +112,23 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     </p>
     </div>
 
-    <?php if ($cfg['preview'] == true) {
+    <?php if ($cfg['download_password_requirement'] === "generated"){
     ?>
+    <div id="show_password">
+    <p><?php echo t('PSW') ?></p>
+
+    <div id="download_password">
+    <p>
+        <?php echo '<input id="output_key" value="' . $download_pass . '"/>'?>
+        <button id="password_copy_button">&#128203;</button>
+    </p>
+    </div>
+    </div>
+    <?php
+    }?>
+
+    <?php if ($cfg['preview'] == true) {
+        ?>
     <div id="upload_finished_preview">
     <p>
         <a id="preview_link" href=""><?php echo t('VIEW_LINK') ?></a>
@@ -122,7 +138,7 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     </p>
     </div>
     <?php
-} ?>
+    } ?>
 
     <div id="upload_direct_download">
     <p>
@@ -161,19 +177,24 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
 </div>
 
 <div id="upload">
-<fieldset>
+<form id="upload-form" onsubmit="
+            event.preventDefault();
+            document.getElementById('upload').style.display = 'none';
+            document.getElementById('uploading').style.display = '';
+            upload (<?php echo jirafeau_get_max_upload_chunk_size_bytes($cfg['max_upload_chunk_size_bytes']); ?>);
+            "><fieldset>
     <legend>
     <?php echo t('SEL_FILE'); ?>
     </legend>
     <p>
         <input type="file" id="file_select" size="30"
     onchange="control_selected_file_size(<?php echo $cfg['maximal_upload_size'] ?>, '<?php
-        if ($cfg['maximal_upload_size'] >= 1024) {
-            echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . number_format($cfg['maximal_upload_size']/1024, 2) . " GB.";
-        } elseif ($cfg['maximal_upload_size'] > 0) {
-            echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . $cfg['maximal_upload_size'] . " MB.";
-        }
-    ?>')"/>
+            if ($cfg['maximal_upload_size'] >= 1024) {
+                echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . number_format($cfg['maximal_upload_size']/1024, 2) . " GB.";
+            } elseif ($cfg['maximal_upload_size'] > 0) {
+                echo t('2_BIG') . ', ' . t('FILE_LIM') . " " . $cfg['maximal_upload_size'] . " MB.";
+            }
+?>')"/>
     </p>
 
     <div id="options">
@@ -183,102 +204,93 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
             echo '<tr><td>' . t('ONE_TIME_DL') . ':</td>';
             echo '<td><input type="checkbox" id="one_time_download" /></td></tr>';
         }
-        ?>
-        <tr>
-        <td><label for="input_key"><?php echo t('PSW') . ':'; ?></label></td>
-        <td><input type="password" name="key" id="input_key" autocomplete = "new-password"/></td>
-        </tr>
+        if ($cfg['download_password_requirement'] === 'generated'){
+            echo '<input type="hidden" name="key" id="input_key" value="' . $download_pass .'"/>';
+        }else{
+            echo '<tr><td><label for="input_key">' . t('PSW') . ':' . '</label></td>';
+            echo '<td><input type="password" name="key" id="input_key" autocomplete = "new-password"';
+            if ($cfg['download_password_policy'] === 'regex'){
+                echo ' pattern="' . substr($cfg['download_password_policy_regex'], 1, strlen($cfg['download_password_policy_regex']) - 2) . '"'; //remove php delimiters
+            }
+            if ($cfg['download_password_requirement'] === 'required'){
+                echo ' required';
+            }
+            echo '/></td></tr>';
+        }?>
         <tr>
         <td><label for="select_time"><?php echo t('TIME_LIM') . ':'; ?></label></td>
         <td><select name="time" id="select_time">
         <?php
-        $expirationTimeOptions = array(
-          array(
-            'value' => 'minute',
-            'label' => '1_MIN'
-          ),
-          array(
-            'value' => 'hour',
-            'label' => '1_H'
-          ),
-          array(
-            'value' => 'day',
-            'label' => '1_D'
-          ),
-          array(
-            'value' => 'week',
-            'label' => '1_W'
-          ),
-          array(
-              'value' => 'fortnight',
-              'label' => '2_W'
-          ),
-          array(
-            'value' => 'month',
-            'label' => '1_M'
-          ),
-          array(
-            'value' => 'quarter',
-            'label' => '1_Q'
-          ),
-          array(
-            'value' => 'year',
-            'label' => '1_Y'
-          ),
-          array(
-            'value' => 'none',
-            'label' => 'NONE'
-          )
-        );
-        foreach ($expirationTimeOptions as $expirationTimeOption) {
-            $selected = ($expirationTimeOption['value'] === $cfg['availability_default'])? 'selected="selected"' : '';
-            if (true === $cfg['availabilities'][$expirationTimeOption['value']]) {
-                echo '<option value="' . $expirationTimeOption['value'] . '" ' .
+$expirationTimeOptions = array(
+  array(
+    'value' => 'minute',
+    'label' => '1_MIN'
+  ),
+  array(
+    'value' => 'hour',
+    'label' => '1_H'
+  ),
+  array(
+    'value' => 'day',
+    'label' => '1_D'
+  ),
+  array(
+    'value' => 'week',
+    'label' => '1_W'
+  ),
+  array(
+      'value' => 'fortnight',
+      'label' => '2_W'
+  ),
+  array(
+    'value' => 'month',
+    'label' => '1_M'
+  ),
+  array(
+    'value' => 'quarter',
+    'label' => '1_Q'
+  ),
+  array(
+    'value' => 'year',
+    'label' => '1_Y'
+  ),
+  array(
+    'value' => 'none',
+    'label' => 'NONE'
+  )
+);
+foreach ($expirationTimeOptions as $expirationTimeOption) {
+    $selected = ($expirationTimeOption['value'] === $cfg['availability_default'])? 'selected="selected"' : '';
+    if (true === $cfg['availabilities'][$expirationTimeOption['value']]) {
+        echo '<option value="' . $expirationTimeOption['value'] . '" ' .
               $selected . '>' . t($expirationTimeOption['label']) . '</option>';
-            }
-        }
-        ?>
+    }
+}
+?>
         </select></td>
         </tr>
 
         <?php
-        if ($cfg['maximal_upload_size'] >= 1024) {
-            echo '<p class="config">' . t('FILE_LIM');
-            echo " " . number_format($cfg['maximal_upload_size'] / 1024, 2) . " GB.</p>";
-        } elseif ($cfg['maximal_upload_size'] > 0) {
-            echo '<p class="config">' . t('FILE_LIM');
-            echo " " . $cfg['maximal_upload_size'] . " MB.</p>";
-        } else {
-            echo '<p class="config"></p>';
-        }
-        ?>
+if ($cfg['maximal_upload_size'] >= 1024) {
+    echo '<p class="config">' . t('FILE_LIM');
+    echo " " . number_format($cfg['maximal_upload_size'] / 1024, 2) . " GB.</p>";
+} elseif ($cfg['maximal_upload_size'] > 0) {
+    echo '<p class="config">' . t('FILE_LIM');
+    echo " " . $cfg['maximal_upload_size'] . " MB.</p>";
+} else {
+    echo '<p class="config"></p>';
+}
+?>
 
         <p id="max_file_size" class="config"></p>
     <p>
-    <?php
-    if (jirafeau_has_upload_password($cfg) && $_SESSION['upload_auth']) {
-        ?>
-    <input type="hidden" id="upload_password" name="upload_password" value="<?php echo $_SESSION['user_upload_password'] ?>"/>
-    <?php
-    } else {
-        ?>
-    <input type="hidden" id="upload_password" name="upload_password" value=""/>
-    <?php
-    }
-    ?>
-    <input type="submit" id="send" value="<?php echo t('SEND'); ?>"
-    onclick="
-        document.getElementById('upload').style.display = 'none';
-        document.getElementById('uploading').style.display = '';
-        upload (<?php echo jirafeau_get_max_upload_chunk_size_bytes($cfg['max_upload_chunk_size_bytes']); ?>);
-    "/>
+    <input type="submit" id="send" value="<?php echo t('SEND'); ?>"/>
     </p>
         </table>
-    </div> </fieldset>
+    </div> </fieldset></form>
 
     <?php
-    if (jirafeau_has_upload_password($cfg)
-        && false === jirafeau_challenge_upload_ip_without_password($cfg, get_ip_address($cfg))) {
+    if (jirafeau_user_session_logged()) {
         ?>
     <form method="post" class="form logout">
         <input type = "hidden" name = "action" value = "logout"/>
@@ -286,7 +298,7 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     </form>
     <?php
     }
-    ?>
+?>
 
 </div>
 
@@ -299,16 +311,17 @@ elseif (true === jirafeau_challenge_upload_ip($cfg, get_ip_address($cfg))) {
     document.getElementById('send').style.display = 'none';
     if (!check_html5_file_api ())
         document.getElementById('max_file_size').innerHTML = '<?php
-            $max_size = jirafeau_get_max_upload_size();
-            if ($max_size > 0) {
-                echo t('NO_BROWSER_SUPPORT') . $max_size;
-            }
-        ?>';
+        $max_size = jirafeau_get_max_upload_size();
+if ($max_size > 0) {
+    echo t('NO_BROWSER_SUPPORT') . $max_size;
+}
+?>';
 
     addCopyListener('upload_link_button', 'upload_link');
     addCopyListener('preview_link_button', 'preview_link');
     addCopyListener('direct_link_button', 'direct_link');
     addCopyListener('delete_link_button', 'delete_link');
+    addTextCopyListener('password_copy_button', 'output_key');
 // @license-end
 </script>
 <?php require(JIRAFEAU_ROOT . 'lib/template/footer.php'); ?>

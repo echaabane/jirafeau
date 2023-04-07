@@ -57,7 +57,7 @@ if (php_sapi_name() == "cli") {
 
     /* Logout if requested. */
     if (jirafeau_admin_session_logged() && isset($_POST['action']) && (strcmp($_POST['action'], 'logout') == 0)) {
-        jirafeau_admin_session_end();
+        jirafeau_session_end();
     }
 
     if (!jirafeau_admin_session_logged()) {
@@ -117,9 +117,9 @@ if (php_sapi_name() == "cli") {
     /* Show admin interface if not downloading a file. */
     if (!(isset($_POST['action']) && strcmp($_POST['action'], 'download') == 0)) {
         require(JIRAFEAU_ROOT . 'lib/template/header.php'); ?><h2><?php echo t('ADMIN_INTERFACE'); ?></h2><?php
-          ?><h2>(version <?php echo JIRAFEAU_VERSION ?>)</h2><?php
+        ?><h2>(version <?php echo JIRAFEAU_VERSION ?>)</h2><?php
 
-          ?><div id = "admin">
+        ?><div id = "admin">
           <fieldset><legend><?php echo t('ACTIONS'); ?></legend>
           <table>
           <form method="post">

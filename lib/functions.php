@@ -101,6 +101,19 @@ function jirafeau_gen_random($l)
     return $code;
 }
 
+function jirafeau_gen_download_pass($length, $allowed_chars)
+{
+    if ($length <= 0) {
+        return false;
+    }
+    $pass="";
+    for ($i = 0; $i < $length; $i++) {
+        $pass .= $allowed_chars[rand(0, strlen($allowed_chars) - 1)];
+    }
+
+    return $pass;
+}
+
 function is_ssl()
 {
     if (isset($_SERVER['HTTPS'])) {
@@ -148,6 +161,9 @@ function jirafeau_clean_rm_link($link)
     if (file_exists(VAR_LINKS . $p . $link)) {
         unlink(VAR_LINKS . $p . $link);
     }
+    if (file_exists(VAR_LINKS . $p . $link . '_download')) {
+        unlink(VAR_LINKS . $p . $link . '_download');
+    }
     $parse = VAR_LINKS . $p;
     $scan = array();
     while (file_exists($parse)
@@ -190,23 +206,23 @@ function jirafeau_ini_to_bytes($value)
     $modifier = substr($value, -1);
     $bytes = substr($value, 0, -1);
     switch (strtoupper($modifier)) {
-    default:
-        return intval($value);
-        break;
-    case 'P':
-        $bytes *= 1024;
-        // no break
-    case 'T':
-        $bytes *= 1024;
-        // no break
-    case 'G':
-        $bytes *= 1024;
-        // no break
-    case 'M':
-        $bytes *= 1024;
-        // no break
-    case 'K':
-        $bytes *= 1024;
+        default:
+            return intval($value);
+            break;
+        case 'P':
+            $bytes *= 1024;
+            // no break
+        case 'T':
+            $bytes *= 1024;
+            // no break
+        case 'G':
+            $bytes *= 1024;
+            // no break
+        case 'M':
+            $bytes *= 1024;
+            // no break
+        case 'K':
+            $bytes *= 1024;
     }
     return $bytes;
 }
@@ -264,19 +280,19 @@ function jirafeau_get_max_upload_chunk_size_bytes($max_upload_chunk_size_bytes =
 function jirafeau_upload_errstr($code)
 {
     switch ($code) {
-    case UPLOAD_ERR_INI_SIZE:
-    case UPLOAD_ERR_FORM_SIZE:
-        return t('Your file exceeds the maximum authorized file size. ');
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            return t('Your file exceeds the maximum authorized file size. ');
 
-    case UPLOAD_ERR_PARTIAL:
-    case UPLOAD_ERR_NO_FILE:
-        return
-            t('Your file was not uploaded correctly. You may succeed in retrying. ');
+        case UPLOAD_ERR_PARTIAL:
+        case UPLOAD_ERR_NO_FILE:
+            return
+                t('Your file was not uploaded correctly. You may succeed in retrying. ');
 
-    case UPLOAD_ERR_NO_TMP_DIR:
-    case UPLOAD_ERR_CANT_WRITE:
-    case UPLOAD_ERR_EXTENSION:
-        return t('Internal error. You may not succeed in retrying. ');
+        case UPLOAD_ERR_NO_TMP_DIR:
+        case UPLOAD_ERR_CANT_WRITE:
+        case UPLOAD_ERR_EXTENSION:
+            return t('Internal error. You may not succeed in retrying. ');
     }
     return t('Unknown error. ');
 }
@@ -693,6 +709,7 @@ function jirafeau_admin_list($name, $file_hash, $link_hash)
                 if (!count($l)) {
                     continue;
                 }
+                $ld = jirafeau_get_download_stats($node);
 
                 /* Filter. */
                 if (!empty($name) && !@preg_match("/$name/i", jirafeau_escape($l['file_name']))) {
@@ -716,6 +733,11 @@ function jirafeau_admin_list($name, $file_hash, $link_hash)
                 echo t('UPLOAD_DATE') . ': ' . jirafeau_get_datetimefield($l['upload_date']) . '<br/>';
                 if (strlen($l['ip']) > 0) {
                     echo t('ORIGIN') . ': ' . $l['ip'] . '<br/>';
+                }
+                echo t('DOWNLOAD_COUNT') . ': ' . $ld['count'] . '<br/>';
+                if ($ld['count'] > 0) {
+                    echo t('DOWNLOAD_DATE') . ': ' . jirafeau_get_datetimefield($ld['date']) . '<br/>';
+                    echo t('DOWNLOAD_IP') . ': ' . $ld['ip'] . '<br/>';
                 }
                 echo '</td><td>';
                 echo '<form method="post">' .
@@ -1205,10 +1227,13 @@ function jirafeau_encrypt_file($fp_src, $fp_dst)
     /* Crypt file. */
     $r = fopen($fp_src, 'r');
     $w = fopen($fp_dst, 'c');
-    while (!feof($r)) {
-        $enc = mcrypt_generic($m, fread($r, 1024));
-        if (fwrite($w, $enc) === false) {
-            return '';
+    while (!feof($r)) { 
+        $to_enc = fread($r, 1024);
+        if (strlen($to_enc) > 0) {
+            $enc = mcrypt_generic($m, $to_enc);
+            if (fwrite($w, $enc) === false) {
+                return '';
+            }
         }
     }
     fclose($r);
@@ -1476,7 +1501,7 @@ function jirafeau_admin_session_start()
     $_SESSION['admin_csrf'] = md5(uniqid(mt_rand(), true));
 }
 
-function jirafeau_admin_session_end()
+function jirafeau_session_end()
 {
     $_SESSION = array();
     session_destroy();
@@ -1494,6 +1519,17 @@ function jirafeau_admin_session_logged()
 function jirafeau_admin_csrf_field()
 {
     return "<input type='hidden' name='admin_csrf' value='". $_SESSION['admin_csrf'] . "'/>";
+}
+
+function jirafeau_user_session_start()
+{
+    $_SESSION['user_auth'] = true;
+}
+
+function jirafeau_user_session_logged()
+{
+    return isset($_SESSION['user_auth']) &&
+        $_SESSION['user_auth'] === true;
 }
 
 function jirafeau_dir_size($dir)
@@ -1575,4 +1611,33 @@ function jirafeau_add_ending_slash($path)
 function jirafeau_default_web_root()
 {
     return $_SERVER['HTTP_HOST'] . str_replace('install.php', '', $_SERVER['REQUEST_URI']);
+}
+
+function jirafeau_get_download_stats($hash)
+{
+    $filename = VAR_LINKS . s2p("$hash") . $hash . '_download';
+
+    if (!file_exists($filename)) {
+        return array('count'=>0);
+    }
+
+    $c = file($filename);
+    $data['count'] = trim($c[0]);
+    $data['date'] = trim($c[1]);
+    $data['ip'] = trim($c[2]);
+
+    return $data;
+}
+
+function jirafeau_write_download_stats($hash, $ip)
+{
+    $data = jirafeau_get_download_stats($hash);
+    $count = $data['count'];
+    $count++;
+
+    $filename = VAR_LINKS . s2p("$hash") . $hash . '_download';
+
+    $handle = fopen($filename, 'w');
+    fwrite($handle, $count . NL . time() . NL . $ip);
+    fclose($handle);
 }

@@ -1,5 +1,5 @@
 # Select docker image from https://hub.docker.com/_/php/
-image: php:7.3
+image: php:8.1
 
 # Select what we should cache
 cache:
@@ -17,44 +17,19 @@ before_script:
   - curl -sS https://getcomposer.org/installer | php
   # Create composer.json file manually, since this is a project without any non-dev dependencies yet
   - php composer.phar require --dev php-parallel-lint/php-parallel-lint
-  - php composer.phar require --dev friendsofphp/php-cs-fixer
+  - php composer.phar require --dev friendsofphp/php-cs-fixer:3.10.0
   # Install all project dependencies
   - php composer.phar install
 
 # Run tests
-test_app_phpdefaultversion:
+job_lint_app_81:
+  image: php:8.1
   script:
     - ./vendor/bin/parallel-lint --exclude vendor .
-    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
+    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --using-cache=no --rules=@PSR2
 
-job_lint_app_phpnextversion:
+job_lint_app_74:
   image: php:7.4
   script:
     - ./vendor/bin/parallel-lint --exclude vendor .
-    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
-  allow_failure: true
-
-# Run same tests with older supported versions
-test_app_php72:
-  image: php:7.2
-  script:
-    - ./vendor/bin/parallel-lint --exclude vendor .
-    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
-
-test_app_php71:
-  image: php:7.1
-  script:
-    - ./vendor/bin/parallel-lint --exclude vendor .
-    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
-
-test_app_php70:
-  image: php:7.0
-  script:
-    - ./vendor/bin/parallel-lint --exclude vendor .
-    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
-
-test_app_php56:
-  image: php:5.6
-  script:
-    - ./vendor/bin/parallel-lint --exclude vendor .
-    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --diff --using-cache=no --rules=@PSR2
+    - ./vendor/bin/php-cs-fixer -vvv fix . --dry-run --using-cache=no --rules=@PSR2

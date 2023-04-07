@@ -20,6 +20,7 @@ See [jirafeau.net](https://jirafeau.net/) for a demo.
 - Shows progression: speed, percentage and remaining upload time
 - Preview content in browser (if possible)
 - Optional password protection (for uploading or downloading)
+- option to require, check or generate file download passwords
 - Set expiration time for downloads
 - Option to self-destruct after first download
 - Shortened URLs using base 64 encoding
